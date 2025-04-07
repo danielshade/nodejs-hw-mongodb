@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-
 import { getEnvVar } from '../utils/getEnvVar.js';
 
 export async function initMongoConnection() {
@@ -8,12 +7,10 @@ export async function initMongoConnection() {
     const password = getEnvVar('MONGODB_PASSWORD');
     const url = getEnvVar('MONGODB_URL');
     const db = getEnvVar('MONGODB_DB');
-
     await mongoose.connect(
-      `mongodb+srv://${user}:${password}@${url}/${db}?retryWrites=true&w=majority&appName=Cluster0`,
+      `mongodb+srv://${user}:${password}@${url}/${db}?retryWrites=true&w=majonity`,
     );
-    console.log('Database pre-connected');
-  } catch (e) {
-    console.log('Error while setting up mongo connection', e);
+  } catch (error) {
+    console.error(error);
   }
 }

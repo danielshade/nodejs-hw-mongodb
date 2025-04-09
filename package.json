@@ -1,18 +1,16 @@
 {
   "name": "nodejs-hw-mongodb",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "",
   "type": "module",
+  "main": "index.js",
   "scripts": {
-    "lint": "eslint src/**/*.js",
-    "start": "node ./src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
   },
   "keywords": [],
-  "author": "Serhii Mordvaniuk <sm636332@gmail.com>",
-  "private": "true",
+  "author": "Irina Panasiuk <panasykira2022@gmail.com>",
   "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "eslint": "^9.21.0",

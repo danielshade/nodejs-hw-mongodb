@@ -1,34 +1,25 @@
-import { ContactsCollection } from '../db/models/contact.js';
+import { ContactsCollection } from '../db/models/contacts.js';
 
 export const getAllContacts = async () => {
-  return await ContactsCollection.find();
+  try {
+    const contacts = await ContactsCollection.find();
+    return contacts;
+  } catch (error) {
+    console.error('Error getting contacts:', error);
+    throw error;
+  }
 };
 
-export const getContactById = async (id) => {
-  return await ContactsCollection.findById(id);
-};
-
-export const postContact = async (payload) => {
-  return await ContactsCollection.create(payload);
-};
-
-export const patchContact = async (id, payload) => {
-  const rawResult = await ContactsCollection.findOneAndUpdate(
-    { _id: id },
-    payload,
-    {
-      new: true,
-      includeResultMetadata: true,
-    },
-  );
-
-  if (!rawResult || !rawResult.value) return null;
-
-  return {
-    contact: rawResult.value,
-  };
-};
-
-export const deleteContact = async (id) => {
-  return ContactsCollection.findOneAndDelete({ _id: id });
+export const getContactById = async (contactId) => {
+  try {
+    const contact = await ContactsCollection.findById(contactId);
+    if (!contact) {
+      console.log(`Contact with id ${contactId} not found in database`);
+      return null;
+    }
+    return contact;
+  } catch (error) {
+    console.error('Error getting contact:', error);
+    throw error;
+  }
 };

@@ -6,15 +6,12 @@ dotenv.config();
 
 const DB_HOST = getEnvVar('DB_HOST');
 
-export const connectDB = async () => {
-  try {
-    await mongoose.connect(DB_HOST, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('✅ Підключення до MongoDB успішне');
-  } catch (error) {
-    console.error('❌ Помилка підключення до MongoDB:', error.message);
-    process.exit(1);
-  }
-};
+const mongoose = require('mongoose');
+
+mongoose.connect(process.env.DB_HOST)
+  .then(() => {
+    console.log('MongoDB connected successfully');
+  })
+  .catch((error) => {
+    console.error('MongoDB connection error:', error.message);
+  });

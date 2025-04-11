@@ -1,20 +1,24 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-import { getEnvVar } from '../utils/getEnvVar.js';
+const { DB_HOST } = process.env;
 
-export const initMongoConnection = async () => {
+if (!DB_HOST) {
+  console.error('❌ DB_HOST не вказано у .env файлі');
+  process.exit(1);
+}
+
+const connectDB = async () => {
   try {
-    const user = getEnvVar('MONGODB_USER');
-    const password = getEnvVar('MONGODB_PASSWORD');
-    const url = getEnvVar('MONGODB_URL');
-    const db = getEnvVar('MONGODB_DB');
-
-    await mongoose.connect(
-      `mongodb+srv://${user}:${password}@${url}/${db}?retryWrites=true&w=majority&appName=Cluster0`,
-    );
-    console.log('Mongo connection successfully established!');
-  } catch (e) {
-    console.log('Error while setting up mongo connection', e);
-    throw e;
+    await mongoose.connect(DB_HOST, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('✅ Підключення до MongoDB успішне');
+  } catch (error) {
+    console.error('❌ Помилка підключення до MongoDB:', error.message);
+    process.exit(1);
   }
 };
+
+module.exports = connectDB;

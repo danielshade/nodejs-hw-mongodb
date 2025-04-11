@@ -1,17 +1,13 @@
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import { getEnvVar } from '../utils/getEnvVar.js';
+import mongoose from "mongoose";
 
-dotenv.config();
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.DB_HOST);
+    console.log("Database connection successful");
+  } catch (error) {
+    console.log(error.message);
+    process.exit(1);
+  }
+};
 
-const DB_HOST = getEnvVar('DB_HOST');
-
-const mongoose = require('mongoose');
-
-mongoose.connect(process.env.DB_HOST)
-  .then(() => {
-    console.log('MongoDB connected successfully');
-  })
-  .catch((error) => {
-    console.error('MongoDB connection error:', error.message);
-  });
+export default connectDB;

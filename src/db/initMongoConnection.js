@@ -1,14 +1,12 @@
-const mongoose = require('mongoose');
-require('dotenv').config();
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import { getEnvVar } from '../utils/getEnvVar.js';
 
-const { DB_HOST } = process.env;
+dotenv.config();
 
-if (!DB_HOST) {
-  console.error('❌ DB_HOST не вказано у .env файлі');
-  process.exit(1);
-}
+const DB_HOST = getEnvVar('DB_HOST');
 
-const connectDB = async () => {
+export const connectDB = async () => {
   try {
     await mongoose.connect(DB_HOST, {
       useNewUrlParser: true,
@@ -20,5 +18,3 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-
-module.exports = connectDB;

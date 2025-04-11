@@ -1,9 +1,8 @@
 import { connectDB } from './db/connectDB.js';
 import { setupServer } from './server.js';
 
-await connectDB();
+await connectDB(); // або initMongoConnection
 setupServer();
-import { setupServer } from './server.js';
 
 await initMongoConnection();
 

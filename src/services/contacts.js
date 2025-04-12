@@ -1,18 +1,21 @@
-import { ContactsCollection } from '../db/models/contacts.js';
+export const getAllContacts = ({ skip = 0, limit = 10 }) => {
+  return Contact.find().skip(skip).limit(limit);
+};
 
-export const getAllContacts = () => ContactsCollection.find();
+export const getTotalContactsCount = () => Contact.countDocuments();
 
-export const getContactById = (contactId) =>
-  ContactsCollection.findById(contactId);
+export const getContactById = async (id) => {
+  return Contact.findById(id);
+};
 
-export const createContact = (contactData) =>
-  ContactsCollection.create(contactData);
+export const createContact = async (data) => {
+  return Contact.create(data);
+};
 
-export const updateContactById = (contactId, contactPayload, options = {}) =>
-  ContactsCollection.findByIdAndUpdate(contactId, contactPayload, {
-    new: true,
-    ...options,
-  });
+export const updateContactById = async (id, data) => {
+  return Contact.findByIdAndUpdate(id, data, { new: true });
+};
 
-export const deleteContactById = (contactId) =>
-  ContactsCollection.findByIdAndDelete(contactId);
+export const deleteContactById = async (id) => {
+  return Contact.findByIdAndDelete(id);
+};

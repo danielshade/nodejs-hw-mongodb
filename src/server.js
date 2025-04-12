@@ -1,8 +1,9 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import logger from 'pino-http';
 import { getEnvVar } from './utils/getEnvVar.js';
-import { contactsRouter } from './routers/contacts.js';
+import contactsRouter from './routers/contacts.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 

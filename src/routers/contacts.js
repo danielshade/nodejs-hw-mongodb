@@ -14,5 +14,6 @@ router.get('/:contactId', getContactByIdController);
 router.post('/', createContactController);
 router.put('/:contactId', updateContactController);
 router.delete('/:contactId', deleteContactController);
-export default router;
+export const contactsRouter = router;
+
 

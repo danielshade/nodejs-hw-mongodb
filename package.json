@@ -9,7 +9,7 @@
     "dev": "nodemon src/index.js"
   },
   "keywords": [],
-  "author": "Serhii Mordvaniuk <sm636332@gmail.com>",
+  "author": "Danylo Volodko <danylovol13@gmail.com>",
   "private": "true",
   "license": "ISC",
   "description": "",

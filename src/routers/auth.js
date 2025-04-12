@@ -1,10 +1,11 @@
-import express from 'express';
-import { registerController } from '../controllers/auth.js';
+import { Router } from 'express';
+import { sendResetEmailController } from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
-import { registerSchema } from '../validations/authSchemas.js';
+import { sendResetEmailSchema } from '../validations/authSchemas.js';
 
-const router = express.Router();
+const router = Router();
 
-router.post('/register', validateBody(registerSchema), registerController);
+router.post('/send-reset-email', validateBody(sendResetEmailSchema), sendResetEmailController);
 
 export default router;
+

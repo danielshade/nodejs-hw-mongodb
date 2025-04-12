@@ -10,9 +10,7 @@ info:
 
 servers:
   - url: http://localhost:3000
-    description: Локальний сервер
-  - url: https://hw7-swagger-<твій-проєкт>.onrender.com
-    description: Деплой на Render
+  - url: https://hw7-swagger.onrender.com
 
 tags:
   - name: Contacts

@@ -1,0 +1,30 @@
+type: object
+properties:
+  _id:
+    type: string
+    example: "6618d27a0b1eea6fcdf7c123"
+  name:
+    type: string
+    example: "John Doe"
+  email:
+    type: string
+    example: "johndoe@example.com"
+  phone:
+    type: string
+    example: "+380501234567"
+  contactType:
+    type: string
+    example: "personal"
+  isFavourite:
+    type: boolean
+    example: true
+  photo:
+    type: string
+    example: "https://res.cloudinary.com/demo/image/upload/v1713000000/photo.jpg"
+  userId:
+    type: string
+    example: "6618d27a0b1eea6fcdf7cabc"
+required:
+  - name
+  - email
+  - phone

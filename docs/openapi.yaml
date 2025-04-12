@@ -2,35 +2,27 @@ openapi: 3.1.0
 info:
   version: 1.0.0
   title: Contacts API
-  description: |
-    API сервіс для управління контактами користувачів з підтримкою авторизації, завантаженням зображень та email-повідомленнями.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-
-servers:
-  - url: http://localhost:3000
-  - url: https://hw7-swagger.onrender.com
+  description: |
+    API для керування контактами з авторизацією та підтримкою роботи з зображеннями.
 
 tags:
   - name: Contacts
-    description: Операції над контактами
+    description: Операції з контактами
   - name: Auth
-    description: Авторизація та реєстрація користувачів
+    description: Авторизація користувачів
+
+servers:
+  - url: http://localhost:3000
+  - url: https://hw7-swagger-cb92.onrender.com
 
 paths:
   /contacts:
-    get:
-      $ref: ../swagger/paths/contacts/get.yaml
-    post:
-      $ref: ../swagger/paths/contacts/post.yaml
-  /contacts/{contactId}:
-    get:
-      $ref: ../swagger/paths/contacts/id/get.yaml
-    patch:
-      $ref: ../swagger/paths/contacts/id/patch.yaml
-    delete:
-      $ref: ../swagger/paths/contacts/id/delete.yaml
+    $ref: "../swagger/paths/contacts/index.yaml"
+  /contacts/{id}:
+    $ref: "../swagger/paths/contacts/{id}/get.yaml"
 
 components:
   securitySchemes:

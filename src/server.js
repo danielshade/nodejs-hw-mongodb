@@ -5,6 +5,7 @@ import logger from 'pino-http';
 import { contactsRouter } from './routers/contacts.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import authRouter from './routers/auth.js';
 
 export function setupServer() {
   const app = express();
@@ -12,6 +13,9 @@ export function setupServer() {
   app.use(cors());
   app.use(express.json());
   app.use(logger());
+
+  // 👉 Роут для аутентифікації
+  app.use('/auth', authRouter);
 
   // 👉 Кореневий маршрут
   app.get('/', (req, res) => {
@@ -32,4 +36,3 @@ export function setupServer() {
     console.log(`🚀 Server is running on port ${PORT}`);
   });
 }
-

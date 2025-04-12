@@ -1,25 +1,38 @@
-import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import logger from 'pino-http';
-import { getEnvVar } from './utils/getEnvVar.js';
-import contactsRouter from './routers/contacts.js';
+
+import { contactsRouter } from './routers/contacts.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import authRouter from './routers/auth.js';
 
-const PORT = Number(getEnvVar('PORT', '3000'));
-
-export const setupServer = () => {
+export function setupServer() {
   const app = express();
-  app.use(express.json());
+
   app.use(cors());
+  app.use(express.json());
   app.use(logger());
 
-  app.use(contactsRouter);
+  // 👉 Роут для аутентифікації
+  app.use('/auth', authRouter);
 
-  app.all('*', notFoundHandler);
-  app.use(errorHandler);
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  // 👉 Кореневий маршрут
+  app.get('/', (req, res) => {
+    res.status(200).json({ message: '✅ API is running!' });
   });
-};
+
+  // 👉 Основний роутер для контактів
+  app.use('/contacts', contactsRouter);
+
+  // 👉 Обробка неіснуючих маршрутів
+  app.all('*', notFoundHandler);
+
+  // 👉 Глобальний обробник помилок
+  app.use(errorHandler);
+
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server is running on port ${PORT}`);
+  });
+}

@@ -2,7 +2,8 @@ import getContactById from '../controllers/getContactById.js';
 
 import express from 'express';
 import getAllContacts from '../controllers/getAllContacts.js';
-import { getContactByIdController } from '../controllers/getContactById.js';
+import getContactById from '../controllers/getContactById.js';
+
 
 const router = express.Router();
 

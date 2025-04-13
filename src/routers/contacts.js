@@ -9,6 +9,8 @@ const router = express.Router();
 router.get('/', getAllContactsController);
 router.get('/:contactId', getContactByIdController);
 router.get('/:contactId', getContactById);
+router.get('/', getAllContacts);
+
 
 
 export const contactsRouter = router;

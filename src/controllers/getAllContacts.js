@@ -1,8 +1,12 @@
-import { getAllContactsService } from '../services/getAllContacts.js';
+import getAllContactsService from '../services/getAllContacts.js';
 
 const getAllContacts = async (req, res, next) => {
-    // ...
-  };
-  
-  export default getAllContacts;
-  
+  try {
+    const contacts = await getAllContactsService();
+    res.json(contacts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default getAllContacts;

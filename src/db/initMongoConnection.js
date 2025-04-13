@@ -1,16 +1,18 @@
 import mongoose from 'mongoose';
-import { getEnvVar } from '../utils/getEnvVar.js';
+import dotenv from 'dotenv';
 
-export async function initMongoConnection() {
+dotenv.config();
+
+const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_URL, MONGODB_DB } = process.env;
+
+const connectionString = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_URL}/${MONGODB_DB}?retryWrites=true&w=majority`;
+
+export const initMongoConnection = async () => {
   try {
-    const user = getEnvVar('MONGODB_USER');
-    const password = getEnvVar('MONGODB_PASSWORD');
-    const url = getEnvVar('MONGODB_URL');
-    const db = getEnvVar('MONGODB_DB');
-    await mongoose.connect(
-      `mongodb+srv://${user}:${password}@${url}/${db}?retryWrites=true&w=majonity`,
-    );
-  } catch (error) {
-    console.error(error);
+    await mongoose.connect(connectionString);
+    console.log('Mongo connection successfully established!');
+  } catch (err) {
+    console.error('Mongo connection error:', err.message);
+    process.exit(1);
   }
-}
+};

@@ -1,6 +1,12 @@
-import getAllContactsService from '../services/getAllContacts.js';
+import Contact from '../models/contact.js';
 
-
-export const getAllContacts = async () => {
-  return Contact.find();
+const getAllContactsService = async () => {
+  try {
+    const contacts = await Contact.find();
+    return contacts;
+  } catch (error) {
+    throw new Error('Не вдалося отримати список контактів');
+  }
 };
+
+export default getAllContactsService;

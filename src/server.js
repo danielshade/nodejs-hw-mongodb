@@ -23,3 +23,7 @@ export const setupServer = () => {
     console.log(`Server is running on port ${PORT}`);
   });
 };
+
+app.use((req, res) => {
+  res.status(404).json({ message: 'Not found' });
+});

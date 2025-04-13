@@ -8,7 +8,7 @@
     "start": "node ./src/index.js",
     "dev": "nodemon ./src/index.js"
   },
-  "author": "Danylo Volodko",
+  "author": "Danylo Volodko <danylovol13@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",

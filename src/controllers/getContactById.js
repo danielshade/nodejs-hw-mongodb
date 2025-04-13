@@ -1,4 +1,4 @@
-import Contact from "../models/contact.js"; // або шлях до вашої моделі
+import Contact from '../models/contact.js';
 
 const getContactById = async (req, res, next) => {
   try {
@@ -6,7 +6,7 @@ const getContactById = async (req, res, next) => {
     const contact = await Contact.findById(contactId);
 
     if (!contact) {
-      return res.status(404).json({ message: "Контакт не знайдено" });
+      return res.status(404).json({ message: 'Контакт не знайдено' });
     }
 
     res.json(contact);

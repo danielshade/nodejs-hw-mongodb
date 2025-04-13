@@ -1,4 +1,3 @@
-import getContactById from '../controllers/getContactById.js';
 
 import express from 'express';
 import getAllContacts from '../controllers/getAllContacts.js';

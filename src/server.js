@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { contactsRouter } from './routers/contacts.js';
+import contactsRouter from './routers/contacts.js';
 
 export const setupServer = () => {
   const app = express();

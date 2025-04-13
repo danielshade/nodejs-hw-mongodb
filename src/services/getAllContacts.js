@@ -1,6 +1,6 @@
 import Contact from '../models/contact.js';
 
-const getAllContactsService = async () => {
+export const getAllContactsService = async () => {
   try {
     const contacts = await Contact.find();
     return contacts;
@@ -8,5 +8,3 @@ const getAllContactsService = async () => {
     throw new Error('Не вдалося отримати список контактів');
   }
 };
-
-export default getAllContactsService;

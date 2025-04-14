@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'API is running!' });
 });
 
-app.use('/api/contacts', contactsRouter); // ✅ Префікс API
+app.use('/contacts', contactsRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });

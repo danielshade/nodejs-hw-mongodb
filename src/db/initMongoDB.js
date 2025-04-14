@@ -1,15 +1,11 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 export const initMongoDB = async () => {
   try {
-    const MONGO_URL = process.env.MONGO_URL;
-    await mongoose.connect(MONGO_URL);
+    await mongoose.connect('mongodb+srv://danylovol13:58baxmLejH63sBD@cluster0.4uvzyak.mongodb.net/contactsdb?retryWrites=true&w=majority&appName=Cluster0');
     console.log('Mongo connection successfully established!');
-  } catch (error) {
-    console.error('Mongo connection failed:', error.message);
-    process.exit(1);
+  } catch (e) {
+    console.log('Error while setting up mongo connection', e);
+    throw e;
   }
 };

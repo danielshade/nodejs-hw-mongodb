@@ -9,7 +9,7 @@ const getContactById = async (req, res, next) => {
       return res.status(404).json({ message: 'Контакт не знайдено' });
     }
 
-    res.json(contact);
+    res.status(200).json({ data: contact }); // ✅ ось тут структура з "data"
   } catch (error) {
     next(error);
   }

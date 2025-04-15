@@ -9,9 +9,10 @@ const getContactById = async (req, res, next) => {
     }
     res.status(200).json({
       status: 200,
-      message: `Successfully found contact with id ${id}!`,
-      data: contact,
+      message: `Successfully found contact with id ${id}`,
+      data: [contact], // ❗️Обертаємо в масив
     });
+    
   } catch (error) {
     console.error(error);
     next(error);

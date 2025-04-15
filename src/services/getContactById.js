@@ -3,9 +3,9 @@ import Contact from '../models/contact.js';
 const getContactByIdService = async (id) => {
   try {
     const contact = await Contact.findById(id);
-    return contact;
+    return contact; 
   } catch (error) {
-    throw new Error('Не вдалося знайти контакт');
+    throw new Error('Помилка при пошуку контакту');
   }
 };
 

@@ -13,6 +13,7 @@ const getContactById = async (req, res, next) => {
       data: contact,
     });
   } catch (error) {
+    console.error(error);
     next(error);
   }
 };

@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 const { DB_HOST } = process.env;
 
-export const initMongoConnection = async () => {
+const initMongoConnection = async () => {
   try {
     await mongoose.connect(DB_HOST);
     console.log('Mongo connection successfully established!');
@@ -13,3 +14,5 @@ export const initMongoConnection = async () => {
     process.exit(1);
   }
 };
+
+export default initMongoConnection;

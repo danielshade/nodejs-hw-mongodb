@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import pino from 'pino-http';
 import cors from 'cors';
 
 import express from 'express';
@@ -17,13 +16,7 @@ export async function setupServer() {
 
   app.use(cors());
 
-  app.use(
-    pino({
-      transport: {
-        target: 'pino-pretty',
-      },
-    }),
-  );
+  
 
   app.get('/', (req, res) => {
     res.json({ message: 'Not found' });

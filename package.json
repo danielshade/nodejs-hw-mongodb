@@ -4,7 +4,6 @@
   "description": "",
   "main": "src/index.js",
   "type": "module",
-  
   "scripts": {
     "start": "node ./src/index.js",
     "dev": "nodemon ./src/index.js"
@@ -15,7 +14,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
-    "mongoose": "^8.13.2"
+    "mongoose": "^8.13.2",
+    "pino-http": "^10.4.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

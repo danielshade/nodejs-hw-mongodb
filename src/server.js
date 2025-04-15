@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import contactsRouter from './routes/contacts.js';
 import studentsRouter from './routes/students.js';
-import Student from '../models/student.js';
+import Student from './models/student.js'; // ✅
 
 
 export const setupServer = () => {

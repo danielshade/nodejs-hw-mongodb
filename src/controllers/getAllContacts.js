@@ -1,6 +1,6 @@
 import getAllContactsService from '../services/getAllContacts.js';
 
-export const getAllContactsController = async (req, res, next) => {
+const getAllContacts = async (req, res, next) => {
   try {
     const contacts = await getAllContactsService();
     res.status(200).json({
@@ -12,3 +12,5 @@ export const getAllContactsController = async (req, res, next) => {
     next(error);
   }
 };
+
+export default getAllContacts;

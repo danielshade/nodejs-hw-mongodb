@@ -21,4 +21,4 @@ const getStudentById = async (req, res, next) => {
     }
   };
   
-  export default addStudent;
+  export default getStudentById;

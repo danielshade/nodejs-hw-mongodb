@@ -1,20 +1,15 @@
 import express from 'express';
 import cors from 'cors';
-
-import contactsRouter from './routes/contacts.js';
-import studentsRouter from './routes/students.js';
+import contactsRouter from './routes/contacts.js'; // ✅ правильно
+// ...
 
 export const setupServer = () => {
   const app = express();
-
   app.use(cors());
   app.use(express.json());
 
-  // Маршрути повинні йти перед 404
-  app.use('/contacts', contactsRouter);
-  app.use('/students', studentsRouter);
+  app.use('/contacts', contactsRouter); // ✅ активний маршрут
 
-  // Обробка неіснуючих маршрутів
   app.use((req, res) => {
     res.status(404).json({ message: 'Not found' });
   });

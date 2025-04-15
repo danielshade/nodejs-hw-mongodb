@@ -1,10 +1,8 @@
 import express from 'express';
-import getAllContacts from '../controllers/getAllContacts.js';
-import getContactById from '../controllers/getContactById.js';
+import getAllContacts from '../controllers/getAllContacts.js'; // ❗ важливо — має бути default export
 
 const router = express.Router();
 
 router.get('/', getAllContacts);
-router.get('/:id', getContactById); 
 
 export default router;

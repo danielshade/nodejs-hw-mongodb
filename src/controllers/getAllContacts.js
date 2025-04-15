@@ -9,4 +9,8 @@ const getAllContacts = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+
 };
+
+export default getAllContacts;
+

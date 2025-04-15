@@ -1,6 +1,12 @@
 import Contact from '../models/contact.js';
 
-export async function getContactById(id) {
-  const contact = await Contact.findById(id);
-  return contact;
-}
+const getContactByIdService = async (id) => {
+  try {
+    const contact = await Contact.findById(id);
+    return contact;
+  } catch (error) {
+    throw new Error('Не вдалося знайти контакт');
+  }
+};
+
+export default getContactByIdService;

@@ -1,5 +1,8 @@
-import connectDB from './db/connectDB.js';
 import { setupServer } from './server.js';
+import { initMongoConnection } from './db/initMongoConnection.js';
 
-await connectDB();
-setupServer();
+async function bootstrap() {
+  await initMongoConnection();
+  setupServer();
+}
+bootstrap();

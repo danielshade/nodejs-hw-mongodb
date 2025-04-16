@@ -1,12 +1,15 @@
-import Contact from '../models/contact.js';
+import addContactService from '../services/addContact.js';
 
 const addContact = async (req, res, next) => {
   try {
-    const { name, email, phone } = req.body;
+    const contactData = req.body;
+    const newContact = await addContactService(contactData);
 
-    const newContact = await Contact.create({ name, email, phone });
-
-    res.status(201).json({ data: newContact }); // ✅ Відповідь у форматі { data: {...} }
+    res.status(201).json({
+      status: 201,
+      message: 'Contact created',
+      data: [newContact], // завжди масив
+    });
   } catch (error) {
     next(error);
   }

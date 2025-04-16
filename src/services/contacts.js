@@ -8,11 +8,12 @@ export const getContactById = (contactId) =>
 export const createContact = (contactData) =>
   ContactsCollection.create(contactData);
 
+
 export const updateContactById = (contactId, contactPayload, options = {}) =>
   ContactsCollection.findByIdAndUpdate(contactId, contactPayload, {
     new: true,
     ...options,
   });
 
-export const deleteContactById = (contactId) =>
-  ContactsCollection.findByIdAndDelete(contactId);
+  export const deleteContactById = (contactId) =>
+    ContactsCollection.findByIdAndDelete(contactId);

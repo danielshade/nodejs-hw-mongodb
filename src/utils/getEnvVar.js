@@ -10,4 +10,8 @@ export function getEnvVar(name, defaultValue) {
   if (defaultValue) return defaultValue;
 
   throw new Error(`Missing: process.env['${name}'].`);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 9fd3b270f1ba0c3fe29369c19336d5570004c794

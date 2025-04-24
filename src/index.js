@@ -1,9 +1,10 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
-import connectDB from './db/connectDB.js';
+import { initMongoConnection } from './db/initMongoConnection.js';
 import { setupServer } from './server.js';
 
-await connectDB();       // Підключення до бази
-setupServer();           // Запуск сервера
+
+await initMongoConnection();
+
+setupServer();
+
+
 

@@ -48,12 +48,7 @@
     "dev": "nodemon src/index.js"
   },
   "keywords": [],
-<<<<<<< HEAD
   "author": "",
-=======
-  "author": "Danylo Volodko <danylovol13@gmail.com>",
-  "private": "true",
->>>>>>> 532d43e610d6616fbd3bbc6b4265fc3ffb8e1810
   "license": "ISC",
   "description": "",
   "devDependencies": {

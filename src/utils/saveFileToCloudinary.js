@@ -6,7 +6,8 @@ import { CLOUDINARY } from '../constants/index.js';
 
 cloudinary.v2.config({
   secure: true,
-  cloud_name: getEnvVar(CLOUDINARY.CLOUD_NAME),
+  cloud_name: getEnvVar(CLOUDINARY.CLOUDINARY_CLOUD_NAME
+  ),
   api_key: getEnvVar(CLOUDINARY.API_KEY),
   api_secret: getEnvVar(CLOUDINARY.API_SECRET),
 });

@@ -9,6 +9,7 @@ cloudinary.v2.config({
   cloud_name: getEnvVar(CLOUDINARY.CLOUDINARY_CLOUD_NAME),
   api_key: getEnvVar(CLOUDINARY.CLOUDINARY_API_KEY),
   api_secret: getEnvVar(CLOUDINARY.CLOUDINARY_API_SECRET),
+
 });
 
 export const saveFileToCloudinary = async (file) => {

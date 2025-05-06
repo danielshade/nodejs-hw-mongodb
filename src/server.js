@@ -20,8 +20,9 @@ export const setupServer = () => {
   app.use(cookieParser());
   app.use('/uploads', express.static(UPLOAD_DIR));
 
-  app.use('/contacts', contactsRouter);
-  app.use('/auth', authRouter);
+  app.use('/api/contacts', contactsRouter);
+  app.use('/api/auth', authRouter);
+
 
   app.all('*', notFoundHandler);
   app.use(errorHandler);

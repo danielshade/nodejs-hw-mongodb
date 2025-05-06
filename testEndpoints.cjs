@@ -21,7 +21,7 @@ async function testUploadContact() {
     form.append("name", "Boby");
     form.append("email", "boby@mail.com");
     form.append("phone", "380991111111");
-    form.append("photo", fs.createReadStream("./test.png")); // заміни на шлях до файлу
+    form.append("photo", fs.createReadStream("./temp/1743440113084_838.webp"));
 
     const res = await axios.post("https://hw6-email-and-images.onrender.com/contacts", form, {
       headers: form.getHeaders(),

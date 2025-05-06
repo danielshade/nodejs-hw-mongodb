@@ -3,6 +3,11 @@ import { setupServer } from './server.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
+import authRouter from './routes/auth.js';
+
+app.use('/auth', authRouter);
+
+
 
 import { createDirIfNotExists } from './utils/createDirIfNotExists.js';
 import { TEMP_UPLOAD_DIR, UPLOAD_DIR } from './constants/index.js';

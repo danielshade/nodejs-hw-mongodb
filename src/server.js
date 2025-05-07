@@ -12,8 +12,7 @@ import { UPLOAD_DIR } from './constants/index.js';
 
 const PORT = Number(getEnvVar('PORT', '3000'));
 
-export const setupServer = () => {
-  const app = express();
+export const setupServer = (app) => {
   app.use(express.json());
   app.use(cors());
   app.use(logger());
@@ -22,7 +21,6 @@ export const setupServer = () => {
 
   app.use('/api/contacts', contactsRouter);
   app.use('/api/auth', authRouter);
-
 
   app.all('*', notFoundHandler);
   app.use(errorHandler);

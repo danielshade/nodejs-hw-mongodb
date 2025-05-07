@@ -1,6 +1,8 @@
+// ─────────────── підвантажуємо .env ───────────────
+import 'dotenv/config';
+
 import { initMongoConnection } from './db/initMongoConnection.js';
 import { setupServer } from './server.js';
-
 import { createDirIfNotExists } from './utils/createDirIfNotExists.js';
 import { TEMP_UPLOAD_DIR, UPLOAD_DIR } from './constants/index.js';
 
@@ -12,3 +14,4 @@ const startServer = async () => {
 };
 
 void startServer();
+

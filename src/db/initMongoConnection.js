@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-
 import { getEnvVar } from '../utils/getEnvVar.js';
 
 export const initMongoConnection = async () => {
@@ -9,12 +8,21 @@ export const initMongoConnection = async () => {
     const url = getEnvVar('MONGODB_URL');
     const db = getEnvVar('MONGODB_DB');
 
+    console.log('🔍 Mongo creds:', {
+      user: process.env.MONGODB_USER,
+      pwd: process.env.MONGODB_PASSWORD?.slice(0,3) + '…',
+      url: process.env.MONGODB_URL,
+      db:  process.env.MONGODB_DB
+    });
+    
+
     await mongoose.connect(
-      `mongodb+srv://${user}:${pwd}@${url}/${db}?retryWrites=true&w=majority&appName=homeWork`,
+      `mongodb+srv://${user}:${pwd}@${url}/${db}` +
+        '?retryWrites=true&w=majority&appName=homeWork'
     );
-    console.log('Mongo connection successfully established!');
+    console.log('✅ Mongo connection successfully established!');
   } catch (e) {
-    console.log('Error while setting up mongo connection', e);
+    console.error('❌ Error while setting up mongo connection', e);
     throw e;
   }
 };

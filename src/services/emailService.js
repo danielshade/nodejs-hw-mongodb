@@ -1,33 +1,21 @@
 import nodemailer from 'nodemailer';
+import { getEnvVar } from '../utils/getEnvVar.js';
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: false,
+  host: getEnvVar('SMTP_HOST'),
+  port: Number(getEnvVar('SMTP_PORT')),
+  secure: Number(process.env.SMTP_PORT) === 465, // або false
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD,
+    user: getEnvVar('SMTP_USER'),
+    pass: getEnvVar('SMTP_PASSWORD'),
   },
 });
 
-export const sendResetEmail = async (email, token) => {
-  const resetLink = `${process.env.APP_DOMAIN}/reset-password?token=${token}`;
-
-  const mailOptions = {
-    from: process.env.SMTP_FROM,
-    to: email,
-    subject: 'Reset your password',
-    html: `
-      <p>Click the link below to reset your password. The link is valid for 5 minutes:</p>
-      <a href="${resetLink}">${resetLink}</a>
-    `,
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-    return true;
-  } catch (error) {
-    console.error('❌ Email send error:', error.message);
-    return false;
-  }
+export const sendMail = async ({ to, subject, html }) => {
+  return transporter.sendMail({
+    from: getEnvVar('SMTP_FROM'),
+    to,
+    subject,
+    html,
+  });
 };

@@ -1,20 +1,30 @@
-import { sendResetEmailService, resetPasswordService } from '../services/auth.js';
+import { registerService, loginService, refreshService, logoutService,
+         sendResetEmailService, resetPasswordService } from '../services/auth.js';
 
-export async function sendResetEmailController(req, res) {
-  await sendResetEmailService(req.body.email);
-  res.status(200).json({
-    status: 200,
-    message: 'Reset password email has been successfully sent.',
-    data: {},
-  });
+export async function registerController(req, res) {
+  const { email, password } = req.body;
+  const user = await registerService(email, password);
+  res.status(201).json({ status: 201, data: user });
 }
 
-export async function resetPwdController(req, res) {
-  const { token, password } = req.body;
-  await resetPasswordService(token, password);
-  res.status(200).json({
-    status: 200,
-    message: 'Password has been successfully reset.',
-    data: {},
-  });
+export async function loginController(req, res) {
+  const { email, password } = req.body;
+  const tokens = await loginService(email, password);
+  res.json({ status: 200, data: tokens });
 }
+
+export async function refreshController(req, res) {
+  const { token } = req.body;
+  const newTokens = await refreshService(token);
+  res.json({ status: 200, data: newTokens });
+}
+
+export async function logoutController(req, res) {
+  const { token } = req.body;
+  await logoutService(token);
+  res.sendStatus(204);
+}
+
+// існуючі
+export { sendResetEmailController, resetPwdController } from './authController.js'; 
+// (або об’єднайте всі в одному файлі)

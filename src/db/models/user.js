@@ -1,16 +1,37 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
-const userSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-}, { timestamps: true });
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    token: {
+      type: String,
+      default: null,
+    },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  }
+);
 
-userSchema.methods.setPassword = function(pass) {
-  this.password = bcrypt.hashSync(pass, 10);
+// Метод для хешування і збереження пароля
+userSchema.methods.setPassword = function (plainPassword) {
+  const hash = bcrypt.hashSync(plainPassword, 10);
+  this.password = hash;
 };
-userSchema.methods.isValidPassword = function(pass) {
-  return bcrypt.compareSync(pass, this.password);
+
+// Метод для перевірки, чи підходить введений пароль
+userSchema.methods.isValidPassword = function (plainPassword) {
+  return bcrypt.compareSync(plainPassword, this.password);
 };
 
 export const UsersCollection = mongoose.model('User', userSchema);

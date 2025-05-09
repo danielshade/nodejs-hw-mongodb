@@ -5,9 +5,12 @@ import {
   sendResetEmailSchema, resetPwdSchema
 } from '../schemas/authSchemas.js';
 import {
-  registerController, loginController,
-  refreshController, logoutController,
-  sendResetEmailController, resetPwdController
+  registerController,
+  loginController,
+  refreshController,
+  logoutController,
+  sendResetEmailController,
+  resetPwdController
 } from '../controllers/authController.js';
 
 const router = express.Router();

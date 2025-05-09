@@ -32,6 +32,3 @@ export async function logoutController(req, res) {
   res.sendStatus(204);
 }
 
-// існуючі
-export { sendResetEmailController, resetPwdController } from './authController.js'; 
-// (або об’єднайте всі в одному файлі)

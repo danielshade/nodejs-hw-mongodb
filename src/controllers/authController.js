@@ -1,5 +1,12 @@
-import { registerService, loginService, refreshService, logoutService,
-         sendResetEmailService, resetPasswordService } from '../services/auth.js';
+import {
+  registerService,
+  loginService,
+  refreshService,
+  logoutService,
+  sendResetEmailService,
+  resetPasswordService
+} from '../services/auth.js';
+
 
 export async function registerController(req, res) {
   const { email, password } = req.body;

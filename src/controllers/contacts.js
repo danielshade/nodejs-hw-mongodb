@@ -60,3 +60,5 @@ export const updateContactById = async (contactId, userId, update) => {
 export const deleteContactById = async (contactId, userId) => {
   return ContactsCollection.findOneAndDelete({ _id: contactId, owner: userId }).lean();
 };
+
+export { deleteContactByIdController as removeContact };

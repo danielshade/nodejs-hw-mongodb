@@ -1,64 +1,57 @@
-// src/services/contacts.js
-import { ContactsCollection } from '../db/models/contact.js'; // поправ шлях, якщо треба
+import createHttpError from 'http-errors';
+import { getEnvVar } from '../utils/getEnvVar.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import {
+  getAllContacts,
+  getContactById,
+  createContact,
+  updateContactById,
+  deleteContactById
+} from '../services/contacts.js';
 
-/**
- * Отримати всі контакти з пагінацією і сортуванням
- */
-export const getAllContacts = async ({ page = 1, perPage = 20, sortBy, sortOrder, userId }) => {
-  const skip = (page - 1) * perPage;
-  const sortOption = sortBy ? { [sortBy]: sortOrder === 'desc' ? -1 : 1 } : {};
-
-  return ContactsCollection
-    .find({ owner: userId })
-    .sort(sortOption)
-    .skip(skip)
-    .limit(perPage)
-    .lean();
-};
-
-/**
- * Отримати один контакт за id та owner
- */
-export const getContactById = async (contactId, userId) => {
-  return ContactsCollection
-    .findOne({ _id: contactId, owner: userId })
-    .lean();
-};
-
-/**
- * Створити новий контакт
- * @param {{ name, email, phone, photo, userId }} param0
- */
-export const createContact = async ({ name, email, phone, photo, userId }) => {
-  const newContact = await ContactsCollection.create({
-    name,
-    email,
-    phone,
-    photo,
-    owner: userId,
+export async function getContactsController(req, res) {
+  const contacts = await getAllContacts({
+    page: req.query.page,
+    perPage: req.query.perPage,
+    sortBy: req.query.sortBy,
+    sortOrder: req.query.sortOrder,
+    userId: req.user._id,
   });
-  return newContact.toObject();
-};
+  res.json({ status: 200, message: 'Successfully found contacts!', data: contacts });
+}
 
-/**
- * Оновити контакт за id та owner
- * @param {string} contactId 
- * @param {string} userId 
- * @param {{ name?, email?, phone?, photo? }} update 
- */
-export const updateContactById = async (contactId, userId, update) => {
-  return ContactsCollection.findOneAndUpdate(
-    { _id: contactId, owner: userId },
-    update,
-    { new: true, lean: true }
-  );
-};
+export async function getContactByIdController(req, res) {
+  const contact = await getContactById(req.params.contactId, req.user._id);
+  if (!contact) throw createHttpError(404, 'Contact not found');
+  res.json({ status: 200, message: 'Successfully found contact!', data: contact });
+}
 
-/**
- * Видалити контакт
- */
-export const deleteContactById = async (contactId, userId) => {
-  return ContactsCollection.findOneAndDelete({ _id: contactId, owner: userId }).lean();
-};
+export async function createContactController(req, res) {
+  let photoUrl;
+  if (req.file) {
+    photoUrl = getEnvVar('ENABLE_CLOUDINARY') === 'true'
+      ? await saveFileToCloudinary(req.file)
+      : await saveFileToUploadDir(req.file);
+  }
+  const newContact = await createContact({ ...req.body, photo: photoUrl, userId: req.user._id });
+  res.status(201).json({ status: 201, message: 'Successfully created a contact!', data: newContact });
+}
 
-export { deleteContactByIdController as removeContact };
+export async function updateContactByIdController(req, res) {
+  let photoUrl;
+  if (req.file) {
+    photoUrl = getEnvVar('ENABLE_CLOUDINARY') === 'true'
+      ? await saveFileToCloudinary(req.file)
+      : await saveFileToUploadDir(req.file);
+  }
+  const updated = await updateContactById(req.params.contactId, req.user._id, { ...req.body, photo: photoUrl });
+  if (!updated) throw createHttpError(404, 'Contact not found');
+  res.json({ status: 200, message: 'Successfully patched a contact!', data: updated });
+}
+
+export async function deleteContactByIdController(req, res) {
+  const deleted = await deleteContactById(req.params.contactId, req.user._id);
+  if (!deleted) throw createHttpError(404, 'Contact not found');
+  res.sendStatus(204);
+}

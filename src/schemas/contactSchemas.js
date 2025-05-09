@@ -1,10 +1,13 @@
 import Joi from 'joi';
 
-export const sendResetEmailSchema = Joi.object({
+export const contactCreateSchema = Joi.object({
+  name: Joi.string().min(3).required(),
   email: Joi.string().email().required(),
+  phone: Joi.string().allow('').optional(),
 });
 
-export const resetPwdSchema = Joi.object({
-  token:    Joi.string().required(),
-  password: Joi.string().min(6).required(),
-});
+export const contactUpdateSchema = Joi.object({
+  name: Joi.string().min(3),
+  email: Joi.string().email(),
+  phone: Joi.string(),
+}).min(1);

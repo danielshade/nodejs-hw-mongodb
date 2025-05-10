@@ -1,9 +1,14 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
-import connectDB from './db/connectDB.js';
+import { initMongoConnection } from './db/initMongoConnection.js';
 import { setupServer } from './server.js';
 
-await connectDB();       // Підключення до бази
-setupServer();           // Запуск сервера
+import { createDirIfNotExists } from './utils/createDirIfNotExists.js';
+import { TEMP_UPLOAD_DIR, UPLOAD_DIR } from './constants/index.js';
 
+const startServer = async () => {
+  await initMongoConnection();
+  await createDirIfNotExists(TEMP_UPLOAD_DIR);
+  await createDirIfNotExists(UPLOAD_DIR);
+  setupServer();
+};
+
+void startServer();

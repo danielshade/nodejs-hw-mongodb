@@ -1,132 +1,90 @@
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import createHttpError from 'http-errors';
-import { User } from '../models/user.js';
-import { Session } from '../models/session.js';
-import { sendResetEmail } from '../services/emailService.js';
+import { THIRTY_DAYS } from '../constants/index.js';
+import {
+  loginUser,
+  logoutUser,
+  refreshSession,
+  requestResetToken,
+  resetPassword,
+  userRegister,
+} from '../services/auth.js';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
-// 👉 POST /auth/register
-export const register = async (req, res) => {
-  const { name, email, password } = req.body;
-
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    throw createHttpError(409, 'Email in use');
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const newUser = await User.create({
-    name,
-    email,
-    password: hashedPassword,
+export const saveSessionToCookies = (res, session) => {
+  res.cookie('refreshToken', session.refreshToken, {
+    httpOnly: true,
+    expires: new Date(Date.now() + THIRTY_DAYS),
   });
 
-  const userToReturn = {
-    _id: newUser._id,
-    name: newUser.name,
-    email: newUser.email,
-  };
-
-  res.status(201).json({
-    status: 201,
-    message: 'Successfully registered a user!',
-    data: userToReturn,
+  res.cookie('sessionId', session._id, {
+    httpOnly: true,
+    expires: new Date(Date.now() + THIRTY_DAYS),
   });
 };
 
-// 👉 POST /auth/login
-export const login = async (req, res) => {
-  const { email, password } = req.body;
-
-  const user = await User.findOne({ email });
-  if (!user) {
-    throw createHttpError(401, 'Email or password is wrong');
-  }
-
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    throw createHttpError(401, 'Email or password is wrong');
-  }
-
-  await Session.findOneAndDelete({ userId: user._id });
-
-  const accessToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '15m' });
-  const refreshToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '30d' });
-
-  await Session.create({
-    userId: user._id,
-    accessToken,
-    refreshToken,
-    accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000),
-    refreshTokenValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+export const userRegisterController = async (req, res) => {
+  const user = await userRegister(req.body);
+  res.status(201).json({
+    status: 201,
+    message: 'Successfully registered a user!',
+    data: user,
   });
+};
 
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    sameSite: 'strict',
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-  });
+export const loginUserController = async (req, res) => {
+  const session = await loginUser(req.body);
 
-  res.status(200).json({
+  saveSessionToCookies(res, session);
+
+  res.json({
     status: 200,
     message: 'Successfully logged in an user!',
     data: {
-      accessToken,
+      accessToken: session.accessToken,
     },
   });
 };
 
-// 👉 POST /auth/send-reset-email
-export const sendResetEmailController = async (req, res) => {
-  const { email } = req.body;
+export const refreshTokenController = async (req, res) => {
+  const session = await refreshSession(
+    req.cookies.sessionId,
+    req.cookies.refreshToken,
+  );
 
-  const user = await User.findOne({ email });
-  if (!user) {
-    throw createHttpError(404, 'User not found!');
-  }
+  saveSessionToCookies(res, session);
 
-  const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '5m' });
-
-  const success = await sendResetEmail(email, token);
-
-  if (!success) {
-    throw createHttpError(500, 'Failed to send the email, please try again later.');
-  }
-
-  res.status(200).json({
+  res.json({
     status: 200,
+    message: 'Successfully refreshed a session!',
+    data: {
+      accessToken: session.accessToken,
+    },
+  });
+};
+
+export const logoutUserController = async (req, res) => {
+  if (req.cookies.sessionId) {
+    await logoutUser(req.cookies.sessionId);
+  }
+
+  res.clearCookie('sessionId');
+  res.clearCookie('refreshToken');
+
+  res.sendStatus(204);
+};
+
+export const requestResetEmailController = async (req, res) => {
+  await requestResetToken(req.body.email);
+  res.json({
     message: 'Reset password email has been successfully sent.',
+    status: 200,
     data: {},
   });
 };
 
-// 👉 POST /auth/reset-pwd
 export const resetPasswordController = async (req, res) => {
-  const { token, password } = req.body;
-
-  let decoded;
-  try {
-    decoded = jwt.verify(token, JWT_SECRET);
-  } catch (err) {
-    throw createHttpError(401, 'Token is expired or invalid.');
-  }
-
-  const user = await User.findOne({ email: decoded.email });
-  if (!user) {
-    throw createHttpError(404, 'User not found!');
-  }
-
-  user.password = await bcrypt.hash(password, 10);
-  await user.save();
-
-  await Session.findOneAndDelete({ userId: user._id });
-
-  res.status(200).json({
-    status: 200,
+  await resetPassword(req.body);
+  res.json({
     message: 'Password has been successfully reset.',
+    status: 200,
     data: {},
   });
 };

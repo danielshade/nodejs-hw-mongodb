@@ -6,32 +6,22 @@ import { UsersCollection } from '../db/models/user.js';
 
 export async function authenticate(req, res, next) {
   try {
-    // 1) Дістаємо токен з заголовка
     const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      throw createHttpError(401, 'Not authorized');
-    }
+    console.log('[AUTH] Incoming header:', authHeader);
+    const secret = getEnvVar('JWT_SECRET');
+    console.log('[AUTH] Using JWT_SECRET:', secret);
 
-    // 2) Перевіряємо формат "Bearer <token>"
+    if (!authHeader) throw createHttpError(401, 'Not authorized');
     const [scheme, token] = authHeader.split(' ');
-    if (scheme !== 'Bearer' || !token) {
-      throw createHttpError(401, 'Not authorized');
-    }
+    if (scheme !== 'Bearer' || !token) throw createHttpError(401, 'Not authorized');
 
-    // 3) Верифікація accessToken за JWT_SECRET
-    const payload = jwt.verify(token, getEnvVar('JWT_SECRET'));
-
-    // 4) Знаходимо юзера в БД
+    const payload = jwt.verify(token, secret);  // тут упаде, якщо mismatch
     const user = await UsersCollection.findById(payload.id);
-    if (!user) {
-      throw createHttpError(401, 'Not authorized');
-    }
+    if (!user) throw createHttpError(401, 'Not authorized');
 
-    // 5) Прикріплюємо юзера до запиту
     req.user = user;
     next();
   } catch (err) {
-    // якщо JWT не валідний або будь-яка інша помилка
     next(err);
   }
 }

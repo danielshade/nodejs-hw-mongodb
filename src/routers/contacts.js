@@ -20,5 +20,7 @@ router.get('/:contactId', controllerWrapper(getContactByIdController));
 router.post('/', upload.single('photo'), validateBody(contactCreateSchema), controllerWrapper(createContactController));
 router.patch('/:contactId', upload.single('photo'), validateBody(contactUpdateSchema), controllerWrapper(updateContactByIdController));
 router.delete('/:contactId', controllerWrapper(deleteContactByIdController));
+router.use(authenticate);
+
 
 export default router;

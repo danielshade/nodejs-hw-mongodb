@@ -7,52 +7,69 @@ import {
   resetPasswordService
 } from '../services/auth.js';
 
-// Controller for user registration
-export async function registerController(req, res) {
-  const { email, password } = req.body;
-  const user = await registerService(email, password);
-  res.status(201).json({ status: 201, data: user });
+const COOKIE_OPTS = {
+  httpOnly: true,
+  secure:   process.env.NODE_ENV === 'production',
+  sameSite: 'None',
+  maxAge:   1000 * 60 * 60 * 24 * 7  // 7 днів
+};
+
+export async function registerController(req, res, next) {
+  try {
+    const { email, password } = req.body;
+    const user = await registerService(email, password);
+    res.status(201).json({ status: 201, data: user });
+  } catch (err) { next(err) }
 }
 
-// Controller for user login
-export async function loginController(req, res) {
-  const { email, password } = req.body;
-  const tokens = await loginService(email, password);
-  res.json({ status: 200, data: tokens });
+export async function loginController(req, res, next) {
+  try {
+    const { email, password } = req.body;
+    const { accessToken, refreshToken } = await loginService(email, password);
+    res.cookie('refreshToken', refreshToken, COOKIE_OPTS);
+    res.json({ status: 200, data: { accessToken } });
+  } catch (err) { next(err) }
 }
 
-// Controller to refresh access token
-export async function refreshController(req, res) {
-  const { token } = req.body;
-  const newTokens = await refreshService(token);
-  res.json({ status: 200, data: newTokens });
+export async function refreshController(req, res, next) {
+  try {
+    const { refreshToken } = req.cookies;
+    const { accessToken } = await refreshService(refreshToken);
+    // оновлювати куку не обов’язково, але можна:
+    res.cookie('refreshToken', refreshToken, COOKIE_OPTS);
+    res.json({ status: 200, data: { accessToken } });
+  } catch (err) { next(err) }
 }
 
-// Controller to logout user
-export async function logoutController(req, res) {
-  const { token } = req.body;
-  await logoutService(token);
-  res.sendStatus(204);
+export async function logoutController(req, res, next) {
+  try {
+    const { refreshToken } = req.cookies;
+    await logoutService(refreshToken);
+    res.clearCookie('refreshToken', COOKIE_OPTS);
+    res.sendStatus(204);
+  } catch (err) { next(err) }
 }
 
-// Controller to send reset-password email
-export async function sendResetEmailController(req, res) {
-  const { email } = req.body;
-  await sendResetEmailService(email);
-  res.status(200).json({
-    status: 200,
-    message: 'Reset password email has been successfully sent.',
-    data: {}
-  });
+export async function sendResetEmailController(req, res, next) {
+  try {
+    const { email } = req.body;
+    await sendResetEmailService(email);
+    res.status(200).json({
+      status: 200,
+      message: 'Reset password email has been successfully sent.',
+      data: {}
+    });
+  } catch (err) { next(err) }
 }
 
-// Controller to reset user password
-export async function resetPwdController(req, res) {
-  const { token, password } = req.body;
-  await resetPasswordService(token, password);
-  res.status(200).json({
-    status: 200,
-    message: 'Password has been successfully reset.',
-    data: {}
-  });
+export async function resetPwdController(req, res, next) {
+  try {
+    const { token, password } = req.body;
+    await resetPasswordService(token, password);
+    res.status(200).json({
+      status: 200,
+      message: 'Password has been successfully reset.',
+      data: {}
+    });
+  } catch (err) { next(err) }
 }

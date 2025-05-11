@@ -55,8 +55,9 @@
     "start": "node ./src/index.js",
     "dev": "nodemon src/index.js",
     "build": "npm run build-docs",
-    "build-docs": "redocly bundle sample@v1 --config redocly.yaml --ext json -o docs/swagger.json",
-    "preview-docs": "redocly preview-docs"
+    "build-docs": "redocly bundle docs/openapi.yaml --ext json -o docs/swagger.json",
+    "preview-docs": "redocly preview-docs",
+    "build": "npm run build-docs"
   },
   "keywords": [],
   "author": "",

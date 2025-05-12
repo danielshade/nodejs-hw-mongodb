@@ -1,3 +1,4 @@
+  delete:
   tags:
     - Contacts
   summary: Delete contact by id
@@ -13,11 +14,9 @@
         type: string
         example: 65ca67e7ae7f10c88b598384
   responses:
-  '204':
-    description: No Content
-  '401':
-    $ref: '../../../components/responses/401.yaml'
-  '404':
-    $ref: '../../../components/responses/404.yaml'
-
-
+    '204':
+      description: No Content
+    '401':
+      $ref: '../../../components/responses/401.yaml'
+    '404':
+      $ref: '../../../components/responses/404.yaml'

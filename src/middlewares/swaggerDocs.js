@@ -1,12 +1,18 @@
-import path from 'path';
+// src/middlewares/swaggerDocs.js
+import path from 'node:path';
 import YAML from 'yamljs';
 import swaggerUI from 'swagger-ui-express';
 
 import { SWAGGER_PATH } from '../constants/index.js';
 
 export function swaggerDocs() {
-  
-  const swaggerDoc = YAML.load(path.resolve(process.cwd(), SWAGGER_PATH));
+  // будуємо абсолютний шлях
+  const fullPath = path.resolve(process.cwd(), SWAGGER_PATH);
 
-  return [ swaggerUI.serve, swaggerUI.setup(swaggerDoc) ];
+  // Завантажуємо YAML (наш openapi.yaml)
+  const spec = YAML.load(fullPath);
+
+  // Повертаємо саме той масив, який розгортаємо в server.js
+  return [ swaggerUI.serve, swaggerUI.setup(spec) ];
 }
+

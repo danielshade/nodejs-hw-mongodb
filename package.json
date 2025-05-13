@@ -44,10 +44,12 @@
     "semver": "^7.7.1",
     "simple-update-notifier": "^2.0.0",
     "supports-color": "^5.5.0",
+    "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "to-regex-range": "^5.0.1",
     "touch": "^3.1.1",
-    "undefsafe": "^2.0.5"
+    "undefsafe": "^2.0.5",
+    "yamljs": "^0.3.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -56,8 +58,7 @@
     "dev": "nodemon src/index.js",
     "build": "npm run build-docs",
     "build-docs": "redocly bundle docs/openapi.yaml --ext json -o docs/swagger.json",
-    "preview-docs": "redocly preview-docs",
-    "build": "npm run build-docs"
+    "preview-docs": "redocly preview-docs"
   },
   "keywords": [],
   "author": "",

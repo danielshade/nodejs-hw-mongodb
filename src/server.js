@@ -1,4 +1,3 @@
-// src/server.js
 import express from 'express';
 import cors from 'cors';
 import logger from 'pino-http';
@@ -18,29 +17,28 @@ const PORT = Number(getEnvVar('PORT', '3000'));
 export function setupServer() {
   const app = express();
 
-  // Парсинг JSON і CORS-політика
+  // 1) Загальні middleware
   app.use(express.json());
   app.use(cors());
   app.use(cookieParser());
 
-  // ⚡️ Сервимо документацію до того, як підключається логер
+  // 2) Документація — **до** логера, щоб не лого­вати весь JSON
   app.use('/api-docs', ...swaggerDocs());
 
-  // Логування всього решта трафіку (окрім /api-docs)
+  // 3) Логер (залогуватиме все ОКРІМ /api-docs)
   app.use(logger());
 
-  // Статика для завантажених файлів
+  // 4) Статика завантажених файлів
   app.use('/uploads', express.static(path.resolve(process.cwd(), UPLOAD_DIR)));
 
-  // Роутери
+  // 5) Основні роутери
   app.use('/contacts', contactsRouter);
   app.use('/auth', authRouter);
 
-  // Обробка 404 та помилок
+  // 6) 404 + error handler
   app.all('*', notFoundHandler);
   app.use(errorHandler);
 
-  // Старт сервера
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });

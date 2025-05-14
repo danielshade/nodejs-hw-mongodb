@@ -1,6 +1,8 @@
 // src/index.js
-import { initMongoConnection } from './db/initMongoConnection.js';
-import { setupServer } from './server.js';
+import 'dotenv/config';            // якщо ви використовуєте .env
+import { startServer } from './server.js';
+
+startServer();
 
 // Відловлюємо всі unhandled rejections, щоб бачити справжню помилку:
 process.on('unhandledRejection', (reason, promise) => {

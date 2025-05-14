@@ -1,6 +1,6 @@
 // src/server.js
 import express from 'express';
-import swaggerDocs from './middlewares/swaggerDocs.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 import cors    from 'cors';
 import logger  from 'pino-http';
 import cookieParser from 'cookie-parser';
@@ -23,7 +23,7 @@ e// 1) базові мідлвари
   app.use(cookieParser());
 
   // 2) підключаємо Swagger UI ПЕРЕД логером, щоб він не засмічував логи
-  app.use('/api-docs', ...swaggerDocs());
+   app.use('/api-docs', ...swaggerDocs());
 
   // 3) логер
   app.use(logger());

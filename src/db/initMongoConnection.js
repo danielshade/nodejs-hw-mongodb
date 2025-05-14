@@ -2,8 +2,13 @@
 import mongoose from 'mongoose';
 import { getEnvVar } from '../utils/getEnvVar.js';
 
-export async function initMongoConnection() {
-  const MONGO_URL = getEnvVar('MONGO_URL');
-  await mongoose.connect(MONGO_URL);
+/**
+ * Ініціалізує підключення до MongoDB.
+ */
+async function initMongoConnection() {
+  const mongoUrl = getEnvVar('MONGO_URL');
+  await mongoose.connect(mongoUrl);
   console.log('✅ MongoDB connected');
 }
+
+export default initMongoConnection;

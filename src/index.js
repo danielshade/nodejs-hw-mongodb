@@ -1,21 +1,21 @@
 // src/index.js
-import 'dotenv/config';            // якщо ви використовуєте .env
-import { startServer } from './server.js';
+import 'dotenv/config';                       // завантажує .env у process.env
+import initMongoConnection from './db/initMongoConnection.js';
+import { setupServer } from './server.js';
 
-startServer();
+const PORT = Number(process.env.PORT ?? 3000);
 
-// Відловлюємо всі unhandled rejections, щоб бачити справжню помилку:
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('🔥 Unhandled Rejection:', reason);
-});
-
-(async () => {
+async function startApp() {
   try {
-    await initMongoConnection();
-    console.log('✅ MongoDB connected');
-    setupServer();
+    await initMongoConnection();             // чекаємо з’єднання з MongoDB
+    const app = setupServer();               // збираємо Express-app (всі middlewares, роутери, swagger тощо)
+    app.listen(PORT, () => {
+      console.log(`✅ Server running on port ${PORT}`);
+    });
   } catch (err) {
     console.error('❌ Startup failed:', err);
     process.exit(1);
   }
-})();
+}
+
+startApp();

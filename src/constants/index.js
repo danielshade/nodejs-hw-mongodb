@@ -6,7 +6,7 @@ export const SORT_ORDER = {
 };
 
 export const FIFTEEN_MINUTES = 15 * 60 * 1000;
-export const THIRTY_DAYS = 24 * 60 * 60 * 1000 * 30;
+export const THIRTY_DAYS    = 24 * 60 * 60 * 1000 * 30;
 
 export const SMTP = {
   SMTP_HOST: 'SMTP_HOST',
@@ -26,4 +26,4 @@ export const CLOUDINARY = {
   API_SECRET: 'API_SECRET',
 };
 
-export const SWAGGER_PATH = 'docs/openapi.yaml';
+export const SWAGGER_PATH = path.resolve(process.cwd(), 'docs', 'openapi.yaml');

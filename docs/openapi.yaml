@@ -1,41 +1,106 @@
 openapi: 3.1.0
 info:
-  version: 1.0.0
   title: Contacts app
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  description: This is a documentation of contacts app
-tags:
-  - name: Contacts
-    description: Operations about contacts.
-  - name: Auth
-    description: Auth operations.
+  version: 1.0.0
 servers:
   - url: https://hw7-swagger-af7t.onrender.com
 
 paths:
   /contacts:
     get:
-      $ref: './swagger/paths/contacts/get.yaml'
+      tags:
+        - Contacts
+      summary: Get list of contacts
+      operationId: getContacts
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          $ref: './components/responses/200-contacts.yaml'
     post:
-      $ref: './swagger/paths/contacts/post.yaml'
+      tags:
+        - Contacts
+      summary: Create a new contact
+      operationId: createContact
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: './components/requestBodies/createContact.yaml'
+      responses:
+        '201':
+          $ref: './components/responses/201-contact.yaml'
 
   /contacts/{id}:
     get:
-      $ref: './swagger/paths/contacts/{id}/get.yaml'
+      tags:
+        - Contacts
+      summary: Get contact by id
+      operationId: getContactById
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: './components/parameters/id.yaml'
+      responses:
+        '200':
+          $ref: './components/responses/200-contact.yaml'
+        '404':
+          $ref: './components/responses/404.yaml'
     patch:
-      $ref: './swagger/paths/contacts/{id}/patch.yaml'
+      tags:
+        - Contacts
+      summary: Update contact by id
+      operationId: updateContact
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: './components/parameters/id.yaml'
+      requestBody:
+        $ref: './components/requestBodies/updateContact.yaml'
+      responses:
+        '200':
+          $ref: './components/responses/200-contact.yaml'
+        '404':
+          $ref: './components/responses/404.yaml'
     delete:
-      $ref: './swagger/paths/contacts/{id}/delete.yaml'
+      tags:
+        - Contacts
+      summary: Delete contact by id
+      operationId: deleteContact
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: './components/parameters/id.yaml'
+      responses:
+        '204':
+          description: No Content
 
   /auth/register:
     post:
-      $ref: './swagger/paths/auth/register.yaml'
+      tags:
+        - Auth
+      summary: Register new user
+      operationId: registerUser
+      requestBody:
+        $ref: './components/requestBodies/register.yaml'
+      responses:
+        '201':
+          $ref: './components/responses/201-user.yaml'
+        '409':
+          $ref: './components/responses/409.yaml'
 
   /auth/login:
     post:
-      $ref: './swagger/paths/auth/login.yaml'
+      tags:
+        - Auth
+      summary: Login user
+      operationId: loginUser
+      requestBody:
+        $ref: './components/requestBodies/login.yaml'
+      responses:
+        '200':
+          $ref: './components/responses/200-token.yaml'
+        '401':
+          $ref: './components/responses/401.yaml'
 
 components:
   securitySchemes:

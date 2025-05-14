@@ -1,16 +1,9 @@
-import mongoose from 'mongoose'
-import { getEnvVar } from '../utils/getEnvVar.js'
+// src/db/initMongoConnection.js
+import mongoose from 'mongoose';
+import { getEnvVar } from '../utils/getEnvVar.js';
 
-export const initMongoConnection = async () => {
-  const uri = getEnvVar('MONGODB_URI')  
-  try {
-    await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-    console.log('MongoDB connected')
-  } catch (error) {
-    console.error('Error connecting to MongoDB', error)
-    throw error
-  }
+export async function initMongoConnection() {
+  const MONGO_URL = getEnvVar('MONGO_URL');
+  await mongoose.connect(MONGO_URL);
+  console.log('✅ MongoDB connected');
 }

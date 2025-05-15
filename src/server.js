@@ -12,25 +12,25 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 export const setupServer = () => {
   const app = express();
 
-  // Security & Logging
+  // --- Security & Parsing ---
   app.use(
     rateLimit({
-      windowMs: 15 * 60 * 1000,
-      max: 100,
+      windowMs: 15 * 60 * 1000, // 15 хв
+      max: 100,                 // максимум 100 запитів з однієї IP за вікно
     })
   );
   app.use(cors({ origin: process.env.APP_DOMAIN, credentials: true }));
   app.use(express.json());
   app.use(cookieParser());
 
-  // Роутери
+  // --- Routes ---
   app.use('/auth', authRouter);
   app.use('/contacts', contactsRouter);
 
-  // Swagger UI
+  // --- Swagger UI ---
   swaggerDocs(app, process.env.PORT);
 
-  // 404 & Error Handler
+  // --- 404 & Error middleware ---
   app.use(notFoundHandler);
   app.use(errorHandler);
 
@@ -39,4 +39,3 @@ export const setupServer = () => {
     console.log(`🚀 Server is running on port ${PORT}`);
   });
 };
-

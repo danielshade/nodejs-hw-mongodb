@@ -1,53 +1,29 @@
-import { Router } from 'express';
-
+// src/routers/contacts.js
+import { Router } from 'express'
+import authenticate from '../middlewares/authenticate.js'
+import validateBody from '../middlewares/validateBody.js'
 import {
-  createContactController,
-  deleteContactByIdController,
-  getContactByIdController,
-  getContactsController,
-  updateContactByIdController,
-} from '../controllers/contacts.js';
-import { controllerWrapper } from '../utils/controllerWrapper.js';
-import { validateBody } from '../middlewares/validateBody.js';
-import {
-  createContactSchema,
-  updateContactSchema,
-} from '../validation/contacts.js';
-import { isValidId } from '../middlewares/isValidId.js';
-import { authenticate } from '../middlewares/authenticate.js';
-import { upload } from '../middlewares/multer.js';
+  getAllContacts,
+  getContactById,
+  createContact,
+  updateContact,
+  deleteContact,
+} from '../controllers/contacts.js'
 
-export const contactsRouter = Router();
+const router = Router()
 
-contactsRouter.get('/', authenticate, controllerWrapper(getContactsController));
+// всі контактні ендпоінти під авторизацією
+router.use(authenticate)
 
-contactsRouter.get(
-  '/:contactId',
-  authenticate,
-  isValidId,
-  controllerWrapper(getContactByIdController),
-);
+router
+  .route('/')
+  .get(getAllContacts)
+  .post(validateBody, createContact)
 
-contactsRouter.post(
-  '/',
-  authenticate,
-  upload.single('photo'),
-  validateBody(createContactSchema),
-  controllerWrapper(createContactController),
-);
+router
+  .route('/:id')
+  .get(getContactById)
+  .patch(validateBody, updateContact)
+  .delete(deleteContact)
 
-contactsRouter.patch(
-  '/:contactId',
-  authenticate,
-  upload.single('photo'),
-  isValidId,
-  validateBody(updateContactSchema),
-  controllerWrapper(updateContactByIdController),
-);
-
-contactsRouter.delete(
-  '/:contactId',
-  authenticate,
-  isValidId,
-  controllerWrapper(deleteContactByIdController),
-);
+export default router

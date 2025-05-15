@@ -1,7 +1,8 @@
 // src/routers/contacts.js
-import { Router }                    from 'express';
-import { authenticate }              from '../middlewares/authenticate.js';
-import { validateBody }              from '../middlewares/validateBody.js';
+import { Router } from 'express';
+import authenticate from '../middlewares/authenticate.js';
+import validateBody from '../middlewares/validateBody.js';
+
 import {
   getAllContacts,
   getContactById,
@@ -10,20 +11,25 @@ import {
   deleteContact,
 } from '../controllers/contacts.js';
 
-const router = Router();
+import {
+  createContactSchema,
+  updateContactSchema,
+} from '../validation/contacts.js';
 
-// всі ендпоінти під авторизацією
-router.use(authenticate);
+const contactsRouter = Router();
 
-router
+// всі ендпоінти — тільки авторизовані
+contactsRouter.use(authenticate);
+
+contactsRouter
   .route('/')
   .get(getAllContacts)
-  .post(validateBody(createContact), createContact);
+  .post(validateBody(createContactSchema), createContact);
 
-router
+contactsRouter
   .route('/:id')
   .get(getContactById)
-  .patch(validateBody(updateContact), updateContact)
+  .patch(validateBody(updateContactSchema), updateContact)
   .delete(deleteContact);
 
-export default router;
+export default contactsRouter;

@@ -1,15 +1,14 @@
-// src/index.js
-import initMongoConnection from './db/initMongoConnection.js'
-import setupServer         from './server.js'
+import { initMongoConnection } from './db/initMongoConnection.js';
+import { setupServer } from './server.js';
 
-async function startApp() {
-  try {
-    await initMongoConnection()
-    setupServer()
-  } catch (err) {
-    console.error('Startup error:', err)
-    process.exit(1)
-  }
-}
+import { createDirIfNotExists } from './utils/createDirIfNotExists.js';
+import { TEMP_UPLOAD_DIR, UPLOAD_DIR } from './constants/index.js';
 
-startApp()
+const startServer = async () => {
+  await initMongoConnection();
+  await createDirIfNotExists(TEMP_UPLOAD_DIR);
+  await createDirIfNotExists(UPLOAD_DIR);
+  setupServer();
+};
+
+void startServer();

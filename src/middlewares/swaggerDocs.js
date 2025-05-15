@@ -1,13 +1,16 @@
-// src/middlewares/swaggerDocs.js
-import fs from 'node:fs'
-import swaggerUI from 'swagger-ui-express'
-import YAML from 'yaml'
-import { SWAGGER_PATH } from '../constants/index.js'
+import createHttpError from 'http-errors';
+import swaggerUI from 'swagger-ui-express';
+import fs from 'node:fs';
 
-export default function swaggerDocs() {
-  // читаємо та парсимо openapi.yaml
-  const file = fs.readFileSync(SWAGGER_PATH, 'utf8')
-  const swaggerSpec = YAML.parse(file)
+import { SWAGGER_PATH } from '../constants/index.js';
 
-  return [ swaggerUI.serve, swaggerUI.setup(swaggerSpec) ]
-}
+export const swaggerDocs = () => {
+  try {
+    const swaggerDoc = JSON.parse(fs.readFileSync(SWAGGER_PATH).toString());
+    return [...swaggerUI.serve, swaggerUI.setup(swaggerDoc)];
+  } catch (err) {
+    console.log(err);
+    return (req, res, next) =>
+      next(createHttpError(500, "Can't load swagger docs"));
+  }
+};

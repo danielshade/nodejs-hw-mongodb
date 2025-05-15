@@ -1,43 +1,45 @@
+// src/server.js
 import express from 'express';
 import cors from 'cors';
-import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
+import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 
 import contactsRouter from './routes/contacts.js';
 import authRouter from './routes/auth.js';
-import { swaggerDocs } from './swagger/swaggerDocs.js';
-import { errorHandler } from './middlewares/errorHandler.js';
-import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import swaggerRouter from './swagger/swagger.js';      // ваше налаштування сваггера
+import errorHandler from './middlewares/errorHandler.js';
+import notFoundHandler from './middlewares/notFoundHandler.js';
 
-export const setupServer = () => {
+export function setupServer() {
   const app = express();
 
-  // --- Rate Limiting ---
+  // standard middlewares
+  app.use(cors());
+  app.use(helmet());
+  app.use(express.json());
+  app.use(morgan('tiny'));
+
+  // rate limiter: максимум 100 запитів з однієї IP за 15 хвилин
   app.use(
     rateLimit({
-      windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 100, // limit each IP to 100 requests per windowMs
+      windowMs: 15 * 60 * 1000,
+      max: 100,
+      standardHeaders: true,
+      legacyHeaders: false,
     })
   );
 
-  // --- CORS & Parsing ---
-  app.use(cors({ origin: process.env.APP_DOMAIN, credentials: true }));
-  app.use(express.json());
-  app.use(cookieParser());
+  // ендпоінти
+  app.use('/api/auth', authRouter);
+  app.use('/api/contacts', contactsRouter);
 
-  // --- Routes ---
-  app.use('/auth', authRouter);
-  app.use('/contacts', contactsRouter);
+  // swagger-ui
+  app.use('/api-docs', swaggerRouter);
 
-  // --- Swagger docs ---
-  swaggerDocs(app, process.env.PORT);
-
-  // --- 404 & Error Handling ---
+  // 404 і глобальний обробник помилок
   app.use(notFoundHandler);
   app.use(errorHandler);
 
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
-  });
-};
+  return app;
+}

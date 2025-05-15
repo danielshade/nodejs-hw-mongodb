@@ -1,4 +1,5 @@
 import { initMongoConnection } from './db/initMongoConnection.js';
+initMongoConnection();
 import { setupServer } from './server.js';
 
 import { createDirIfNotExists } from './utils/createDirIfNotExists.js';

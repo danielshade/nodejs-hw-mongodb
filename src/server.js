@@ -12,13 +12,15 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 export const setupServer = () => {
   const app = express();
 
-  // --- Security & Parsing ---
+  // --- Rate Limiting ---
   app.use(
     rateLimit({
-      windowMs: 15 * 60 * 1000, // 15 хв
-      max: 100,                 // максимум 100 запитів з однієї IP за вікно
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 100, // limit each IP to 100 requests per windowMs
     })
   );
+
+  // --- CORS & Parsing ---
   app.use(cors({ origin: process.env.APP_DOMAIN, credentials: true }));
   app.use(express.json());
   app.use(cookieParser());
@@ -27,10 +29,10 @@ export const setupServer = () => {
   app.use('/auth', authRouter);
   app.use('/contacts', contactsRouter);
 
-  // --- Swagger UI ---
+  // --- Swagger docs ---
   swaggerDocs(app, process.env.PORT);
 
-  // --- 404 & Error middleware ---
+  // --- 404 & Error Handling ---
   app.use(notFoundHandler);
   app.use(errorHandler);
 

@@ -1,47 +1,62 @@
+// src/routers/auth.js
 import { Router } from 'express';
-import { validateBody } from '../middlewares/validateBody.js';
+import validateBody from '../middlewares/validateBody.js';
+import { controllerWrapper } from '../utils/controllerWrapper.js';
 import {
-  loginUserSchema,
+  registerUserController,
+  loginUserController,
+  refreshTokenController,
+  logoutUserController,
+  requestResetEmailController,
+  resetPasswordController,
+} from '../controllers/auth.js';
+import {
   registerUserSchema,
+  loginUserSchema,
   requestResetEmailSchema,
   resetPasswordSchema,
 } from '../validation/auth.js';
-import { controllerWrapper } from '../utils/controllerWrapper.js';
-import {
-  loginUserController,
-  logoutUserController,
-  refreshTokenController,
-  requestResetEmailController,
-  resetPasswordController,
-  userRegisterController,
-} from '../controllers/auth.js';
 
-export const authRouter = Router();
+const router = Router();
 
-authRouter.post(
+// реєстрація
+router.post(
   '/register',
   validateBody(registerUserSchema),
-  controllerWrapper(userRegisterController),
+  controllerWrapper(registerUserController)
 );
 
-authRouter.post(
+// логін
+router.post(
   '/login',
   validateBody(loginUserSchema),
-  controllerWrapper(loginUserController),
+  controllerWrapper(loginUserController)
 );
 
-authRouter.post('/refresh', controllerWrapper(refreshTokenController));
+// оновити токен
+router.post(
+  '/refresh',
+  controllerWrapper(refreshTokenController)
+);
 
-authRouter.post('/logout', controllerWrapper(logoutUserController));
+// вийти (видалити refresh token)
+router.post(
+  '/logout',
+  controllerWrapper(logoutUserController)
+);
 
-authRouter.post(
+// відправити лінк для скидання пароля
+router.post(
   '/send-reset-email',
   validateBody(requestResetEmailSchema),
-  controllerWrapper(requestResetEmailController),
+  controllerWrapper(requestResetEmailController)
 );
 
-authRouter.post(
+// скинути пароль
+router.post(
   '/reset-pwd',
   validateBody(resetPasswordSchema),
-  controllerWrapper(resetPasswordController),
+  controllerWrapper(resetPasswordController)
 );
+
+export default router;

@@ -1,43 +1,20 @@
-import createHttpError from 'http-errors';
-import { SessionsCollection } from '../db/models/session.js';
-import { UsersCollection } from '../db/models/user.js';
+// src/middlewares/authenticate.js
+export function authenticate(req, res, next) {
+  // приклад: перевіряємо наявність токена в заголовку
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.replace('Bearer ', '');
 
-export const authenticate = async (req, res, next) => {
-  const authHeader = req.get('Authorization');
-  if (!authHeader) {
-    next(createHttpError(401, 'Please provide Authorization header'));
-    return;
-  }
-  const bearer = authHeader.split(' ')[0];
-  const token = authHeader.split(' ')[1];
-
-  if (bearer !== 'Bearer' || !token) {
-    next(createHttpError(401, 'Auth header should be of type Bearer'));
-    return;
+  if (!token) {
+    return res.status(401).json({
+      status: 401,
+      message: 'Missing auth token',
+      data: {}
+    });
   }
 
-  const session = await SessionsCollection.findOne({ accessToken: token });
+  // тут ваша логіка верифікації токена…
+  // наприклад, jwt.verify(token, SECRET)
 
-
-  if (!session) {
-    next(createHttpError(401, 'Session not found'));
-    return;
-  }
-
-
-  if (new Date() > new Date(session.accessTokenValidUntil)) {
-    next(createHttpError(401, 'Access token expired'));
-  }
-
-  const user = await UsersCollection.findById(session.userId);
-
-  if (!user) {
-    next(createHttpError(401));
-    return;
-  }
-
-  req.user = user;
-
+  // якщо усе гаразд:
   next();
-};
-
+}

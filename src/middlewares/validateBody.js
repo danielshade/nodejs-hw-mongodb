@@ -1,16 +1,14 @@
-import createHttpError from "http-errors";
-
-export const validateBody = (schema) => async (req, res, next) => {
-  try {
-    await schema.validateAsync(req.body, {
-      abortEarly: false,
-    });
+// src/middlewares/validateBody.js
+export function validateBody(schema) {
+  return (req, res, next) => {
+    const { error } = schema.validate(req.body);
+    if (error) {
+      return res.status(400).json({
+        status: 400,
+        message: error.details.map(d => d.message).join(', '),
+        data: {}
+      });
+    }
     next();
-  }  catch (err) {
-    const error = createHttpError(400, {
-      errors: err.details.map(({message}) => message),
-      message: "The data failed validation!",
-    });
-    next(error);
-  }
-};
+  };
+}

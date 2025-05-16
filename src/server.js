@@ -7,8 +7,8 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 
 import { getEnvVar } from './utils/getEnvVar.js';
-import contactsRouter from './routers/contacts.js';
-import authRouter from './routers/auth.js';
+import contactsRouter from './routers/contacts.js'
+import authRouter     from './routers/auth.js'
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import swaggerDocs from './middlewares/swaggerDocs.js';
@@ -39,8 +39,8 @@ export const setupServer = () => {
   app.use('/uploads', express.static(UPLOAD_DIR));
 
   // головні ендпоінти
-  app.use('/contacts', contactsRouter);
-  app.use('/auth', authRouter);
+  app.use('/contacts', contactsRouter)
+  app.use('/auth',     authRouter)
 
   // документація Swagger UI
   app.use('/api-docs', swaggerDocs());

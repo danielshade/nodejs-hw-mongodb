@@ -1,60 +1,61 @@
-// src/routers/contacts.js
-import { Router } from 'express';
-import { validateBody } from '../middlewares/validateBody.js';
-import { isValidId } from '../middlewares/isValidId.js';
-import { controllerWrapper } from '../utils/controllerWrapper.js';
+//import { Router } from 'express'
+
 import {
-  getAllContactsController,
+  createContactController,
+  deleteContactByIdController,
   getContactByIdController,
-  addContactController,
-  updateContactController,
-  updateStatusController,
-  removeContactController,
-} from '../controllers/contacts.js';
+  getContactsController,
+  updateContactByIdController,
+} from '../controllers/contacts.js'
+import { controllerWrapper } from '../utils/controllerWrapper.js'
+import validateBody from '../middlewares/validateBody.js'
 import {
   createContactSchema,
   updateContactSchema,
-  updateFavoriteSchema,
-} from '../validation/contacts.js';
+} from '../validation/contacts.js'
+import { isValidId } from '../middlewares/isValidId.js'
+import authenticate from '../middlewares/authenticate.js'
+import { upload } from '../middlewares/multer.js'
 
-const contactsRouter = Router();
+const contactsRouter = Router()
 
 contactsRouter.get(
   '/',
-  controllerWrapper(getAllContactsController),
-);
+  authenticate,
+  controllerWrapper(getContactsController),
+)
 
 contactsRouter.get(
-  '/:id',
+  '/:contactId',
+  authenticate,
   isValidId,
   controllerWrapper(getContactByIdController),
-);
+)
 
 contactsRouter.post(
   '/',
+  authenticate,
+  upload.single('photo'),
   validateBody(createContactSchema),
-  controllerWrapper(addContactController),
-);
-
-contactsRouter.put(
-  '/:id',
-  isValidId,
-  validateBody(updateContactSchema),
-  controllerWrapper(updateContactController),
-);
+  controllerWrapper(createContactController),
+)
 
 contactsRouter.patch(
-  '/:id/favorite',
+  '/:contactId',
+  authenticate,
+  upload.single('photo'),
   isValidId,
-  validateBody(updateFavoriteSchema),
-  controllerWrapper(updateStatusController),
-);
+  validateBody(updateContactSchema),
+  controllerWrapper(updateContactByIdController),
+)
 
 contactsRouter.delete(
-  '/:id',
+  '/:contactId',
+  authenticate,
   isValidId,
-  controllerWrapper(removeContactController),
-);
+  controllerWrapper(deleteContactByIdController),
+)
 
-// Додаємо дефолт-експорт
-export default contactsRouter;
+// Дефолтний експорт, щоб у server.js можна було писати:
+// import contactsRouter from './routers/contacts.js';
+export default contactsRouter

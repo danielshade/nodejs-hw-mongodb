@@ -11,6 +11,8 @@ import { errorHandler }   from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { swaggerDocs }    from './middlewares/swaggerDocs.js';
 import { UPLOAD_DIR }     from './constants/index.js';
+import { authenticate } from '../middlewares/authenticate.js';
+
 
 const PORT = Number(getEnvVar('PORT', '3000'));
 

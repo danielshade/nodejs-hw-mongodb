@@ -1,41 +1,42 @@
 // src/middlewares/authenticate.js
-
 import createHttpError from 'http-errors';
 import { SessionsCollection } from '../db/models/session.js';
 import { UsersCollection } from '../db/models/user.js';
 
-const authenticate = async (req, res, next) => {
-  const authHeader = req.get('Authorization');
-  if (!authHeader) {
-    return next(createHttpError(401, 'Please provide Authorization header'));
-  }
+/**
+ * Перевіряє наявність та валідність Bearer-токена,
+ * підтягує сесію й юзера, кидає помилку 401, якщо щось не так.
+ */
+export const authenticate = async (req, res, next) => {
+  try {
+    const authHeader = req.get('Authorization');
+    if (!authHeader) {
+      throw createHttpError(401, 'Please provide Authorization header');
+    }
 
-  // split into ["Bearer", "<token>"]
-  const [bearer, token] = authHeader.split(' ');
-  if (bearer !== 'Bearer' || !token) {
-    return next(createHttpError(401, 'Auth header should be of type Bearer'));
-  }
+    const [scheme, token] = authHeader.split(' ');
+    if (scheme !== 'Bearer' || !token) {
+      throw createHttpError(401, 'Auth header must be "Bearer <token>"');
+    }
 
-  // lookup session by token
-  const session = await SessionsCollection.findOne({ accessToken: token });
-  if (!session) {
-    return next(createHttpError(401, 'Session not found'));
-  }
+    const session = await SessionsCollection.findOne({ accessToken: token });
+    if (!session) {
+      throw createHttpError(401, 'Session not found');
+    }
 
-  // check expiration
-  if (new Date() > new Date(session.accessTokenValidUntil)) {
-    return next(createHttpError(401, 'Access token expired'));
-  }
+    if (new Date() > new Date(session.accessTokenValidUntil)) {
+      throw createHttpError(401, 'Access token expired');
+    }
 
-  // lookup user
-  const user = await UsersCollection.findById(session.userId);
-  if (!user) {
-    return next(createHttpError(401, 'User not found'));
-  }
+    const user = await UsersCollection.findById(session.userId);
+    if (!user) {
+      throw createHttpError(401, 'User not found');
+    }
 
-  // attach user to request
-  req.user = user;
-  next();
+    // передаємо знайденого користувача далі в роутах
+    req.user = user;
+    next();
+  } catch (err) {
+    next(err);
+  }
 };
-
-export default authenticate;

@@ -1,5 +1,3 @@
-// src/routers/contacts.js
-
 import { Router } from 'express';
 
 import {
@@ -13,9 +11,9 @@ import {
 import { controllerWrapper } from '../utils/controllerWrapper.js';
 
 import { validateBody } from '../middlewares/validateBody.js';
-import { isValidId } from '../middlewares/isValidId.js';
-import authenticate from '../middlewares/authenticate.js';
-import upload from '../middlewares/multer.js';
+import { isValidId }   from '../middlewares/isValidId.js';
+import authenticate    from '../middlewares/authenticate.js';
+import { upload }      from '../middlewares/multer.js';        // ← named import
 
 import {
   createContactSchema,

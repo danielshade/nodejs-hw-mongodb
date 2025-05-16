@@ -1,66 +1,59 @@
 // src/routers/contacts.js
 import { Router } from 'express';
-
 import {
-  getAllContactsController,
+  getContactsController,
   getContactByIdController,
-  addContactController,
-  updateContactController,
-  updateStatusController,
-  removeContactController,
+  createContactController,
+  updateContactByIdController,
+  deleteContactByIdController,
 } from '../controllers/contacts.js';
 import { controllerWrapper } from '../utils/controllerWrapper.js';
-import { validateBody } from '../middlewares/validateBody.js';
-import { isValidId } from '../middlewares/isValidId.js';
+import validateBody from '../middlewares/validateBody.js';
+import { createContactSchema, updateContactSchema } from '../validation/contacts.js';
 import authenticate from '../middlewares/authenticate.js';
-import { upload } from '../middlewares/multer.js';
-import {
-  createContactSchema,
-  updateContactSchema,
-  updateFavoriteSchema,
-} from '../validation/contacts.js';
+import isValidId from '../middlewares/isValidId.js';
+import upload from '../middlewares/multer.js';
 
-const contactsRouter = Router();
+export const contactsRouter = Router();
 
-contactsRouter.get('/', authenticate, controllerWrapper(getAllContactsController));
-
+// GET /contacts
 contactsRouter.get(
-  '/:id',
+  '/',
+  authenticate,
+  controllerWrapper(getContactsController),
+);
+
+// GET /contacts/:contactId
+contactsRouter.get(
+  '/:contactId',
   authenticate,
   isValidId,
   controllerWrapper(getContactByIdController),
 );
 
+// POST /contacts
 contactsRouter.post(
   '/',
   authenticate,
   upload.single('photo'),
   validateBody(createContactSchema),
-  controllerWrapper(addContactController),
+  controllerWrapper(createContactController),
 );
 
-contactsRouter.put(
-  '/:id',
-  authenticate,
-  isValidId,
-  validateBody(updateContactSchema),
-  controllerWrapper(updateContactController),
-);
-
+// PATCH /contacts/:contactId
 contactsRouter.patch(
-  '/:id/favorite',
+  '/:contactId',
   authenticate,
   isValidId,
-  validateBody(updateFavoriteSchema),
-  controllerWrapper(updateStatusController),
+  upload.single('photo'),
+  validateBody(updateContactSchema),
+  controllerWrapper(updateContactByIdController),
 );
 
+// DELETE /contacts/:contactId
 contactsRouter.delete(
-  '/:id',
+  '/:contactId',
   authenticate,
   isValidId,
-  controllerWrapper(removeContactController),
+  controllerWrapper(deleteContactByIdController),
 );
-
-// Ось це рядок додає дефолт-експорт:
-export default contactsRouter;

@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 
 import { getEnvVar } from './utils/getEnvVar.js';
 import { contactsRouter } from './routers/contacts.js';    // <-- named import
-import { authRouter }     from './routers/auth.js';        // <-- named import
+import authRouter     from './routers/auth.js';
 import { errorHandler }   from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { swaggerDocs }    from './middlewares/swaggerDocs.js';

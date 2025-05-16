@@ -1,35 +1,31 @@
+// src/routers/contacts.js
 import { Router } from 'express';
 
 import {
-  createContactController,
-  deleteContactByIdController,
+  getAllContactsController,
   getContactByIdController,
-  getContactsController,
-  updateContactByIdController,
+  addContactController,
+  updateContactController,
+  updateStatusController,
+  removeContactController,
 } from '../controllers/contacts.js';
-
 import { controllerWrapper } from '../utils/controllerWrapper.js';
-
 import { validateBody } from '../middlewares/validateBody.js';
-import { isValidId }   from '../middlewares/isValidId.js';
-import authenticate    from '../middlewares/authenticate.js';
-import { upload }      from '../middlewares/multer.js';        // ← named import
-
+import { isValidId } from '../middlewares/isValidId.js';
+import authenticate from '../middlewares/authenticate.js';
+import { upload } from '../middlewares/multer.js';
 import {
   createContactSchema,
   updateContactSchema,
+  updateFavoriteSchema,
 } from '../validation/contacts.js';
 
-export const contactsRouter = Router();
+const contactsRouter = Router();
+
+contactsRouter.get('/', authenticate, controllerWrapper(getAllContactsController));
 
 contactsRouter.get(
-  '/',
-  authenticate,
-  controllerWrapper(getContactsController),
-);
-
-contactsRouter.get(
-  '/:contactId',
+  '/:id',
   authenticate,
   isValidId,
   controllerWrapper(getContactByIdController),
@@ -40,21 +36,31 @@ contactsRouter.post(
   authenticate,
   upload.single('photo'),
   validateBody(createContactSchema),
-  controllerWrapper(createContactController),
+  controllerWrapper(addContactController),
+);
+
+contactsRouter.put(
+  '/:id',
+  authenticate,
+  isValidId,
+  validateBody(updateContactSchema),
+  controllerWrapper(updateContactController),
 );
 
 contactsRouter.patch(
-  '/:contactId',
+  '/:id/favorite',
   authenticate,
-  upload.single('photo'),
   isValidId,
-  validateBody(updateContactSchema),
-  controllerWrapper(updateContactByIdController),
+  validateBody(updateFavoriteSchema),
+  controllerWrapper(updateStatusController),
 );
 
 contactsRouter.delete(
-  '/:contactId',
+  '/:id',
   authenticate,
   isValidId,
-  controllerWrapper(deleteContactByIdController),
+  controllerWrapper(removeContactController),
 );
+
+// Ось це рядок додає дефолт-експорт:
+export default contactsRouter;

@@ -8,11 +8,11 @@ import {
   deleteContactByIdController,
 } from '../controllers/contacts.js';
 import { controllerWrapper } from '../utils/controllerWrapper.js';
-import validateBody from '../middlewares/validateBody.js';
+import { validateBody } from '../middlewares/validateBody.js';
 import { createContactSchema, updateContactSchema } from '../validation/contacts.js';
-import authenticate from '../middlewares/authenticate.js';
-import isValidId from '../middlewares/isValidId.js';
-import upload from '../middlewares/multer.js';
+import { isValidId } from '../middlewares/isValidId.js';
+import { authenticate } from '../middlewares/authenticate.js';
+import { upload } from '../middlewares/multer.js';
 
 export const contactsRouter = Router();
 

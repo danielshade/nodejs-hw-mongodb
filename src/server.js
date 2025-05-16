@@ -1,45 +1,46 @@
 // src/server.js
 import express from 'express';
+import pino from 'pino-http';
 import cors from 'cors';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import rateLimit from 'express-rate-limit';
+import cookieParser from 'cookie-parser';
 
-import contactsRouter from './routes/contacts.js';
-import authRouter from './routes/auth.js';
-import swaggerRouter from './swagger/swagger.js';      // ваше налаштування сваггера
-import errorHandler from './middlewares/errorHandler.js';
-import notFoundHandler from './middlewares/notFoundHandler.js';
+import router from './routers/index.js';
+import { getEnvVar } from './utils/getEnvVar.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
+import { UPLOAD_DIR } from './constants/index.js';
 
-export function setupServer() {
+const PORT = Number(getEnvVar('PORT', '3000'));
+
+export const setupServer = () => {
   const app = express();
 
-  // standard middlewares
   app.use(cors());
-  app.use(helmet());
-  app.use(express.json());
-  app.use(morgan('tiny'));
-
-  // rate limiter: максимум 100 запитів з однієї IP за 15 хвилин
+  app.use(cookieParser());
   app.use(
-    rateLimit({
-      windowMs: 15 * 60 * 1000,
-      max: 100,
-      standardHeaders: true,
-      legacyHeaders: false,
+    pino({
+      transport: {
+        target: 'pino-pretty',
+      },
     })
   );
 
-  // ендпоінти
-  app.use('/api/auth', authRouter);
-  app.use('/api/contacts', contactsRouter);
+  // serve uploaded files
+  app.use('/uploads', express.static(UPLOAD_DIR));
 
-  // swagger-ui
-  app.use('/api-docs', swaggerRouter);
+  // swagger UI
+  app.use('/api-docs', swaggerDocs());
 
-  // 404 і глобальний обробник помилок
-  app.use(notFoundHandler);
+  // all your routes live in src/routers
+  app.use(router);
+
+  // 404 + error handling
+  app.use('*', notFoundHandler);
   app.use(errorHandler);
 
-  return app;
-}
+  const server = app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+  return server;
+};

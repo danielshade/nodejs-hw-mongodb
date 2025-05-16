@@ -1,4 +1,6 @@
-//import { Router } from 'express'
+// src/routers/contacts.js
+
+import { Router } from 'express';
 
 import {
   createContactController,
@@ -6,31 +8,34 @@ import {
   getContactByIdController,
   getContactsController,
   updateContactByIdController,
-} from '../controllers/contacts.js'
-import { controllerWrapper } from '../utils/controllerWrapper.js'
-import validateBody from '../middlewares/validateBody.js'
+} from '../controllers/contacts.js';
+
+import { controllerWrapper } from '../utils/controllerWrapper.js';
+
+import { validateBody } from '../middlewares/validateBody.js';
+import { isValidId } from '../middlewares/isValidId.js';
+import authenticate from '../middlewares/authenticate.js';
+import upload from '../middlewares/multer.js';
+
 import {
   createContactSchema,
   updateContactSchema,
-} from '../validation/contacts.js'
-import { isValidId } from '../middlewares/isValidId.js'
-import authenticate from '../middlewares/authenticate.js'
-import { upload } from '../middlewares/multer.js'
+} from '../validation/contacts.js';
 
-const contactsRouter = Router()
+export const contactsRouter = Router();
 
 contactsRouter.get(
   '/',
   authenticate,
   controllerWrapper(getContactsController),
-)
+);
 
 contactsRouter.get(
   '/:contactId',
   authenticate,
   isValidId,
   controllerWrapper(getContactByIdController),
-)
+);
 
 contactsRouter.post(
   '/',
@@ -38,7 +43,7 @@ contactsRouter.post(
   upload.single('photo'),
   validateBody(createContactSchema),
   controllerWrapper(createContactController),
-)
+);
 
 contactsRouter.patch(
   '/:contactId',
@@ -47,15 +52,11 @@ contactsRouter.patch(
   isValidId,
   validateBody(updateContactSchema),
   controllerWrapper(updateContactByIdController),
-)
+);
 
 contactsRouter.delete(
   '/:contactId',
   authenticate,
   isValidId,
   controllerWrapper(deleteContactByIdController),
-)
-
-// Дефолтний експорт, щоб у server.js можна було писати:
-// import contactsRouter from './routers/contacts.js';
-export default contactsRouter
+);

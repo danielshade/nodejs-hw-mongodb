@@ -1,0 +1,53 @@
+tags:
+  - Contacts
+summary: Update a contact
+operationId: updateContact
+description: Update specific fields of a contact.
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    description: Contact ID
+    required: true
+    schema:
+      type: string
+      example: '67f5a6d199d5f047cda4349d'
+requestBody:
+  required: true
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+            example: Alex Kaplan
+          phoneNumber:
+            type: string
+            example: '+380997990557'
+          email:
+            type: string
+            example: alexkaplan110606@gmail.com
+          isFavourite:
+            type: boolean
+            example: true
+          contactType:
+            type: string
+            enum: [work, home, personal]
+            example: personal
+          photo:
+            type: string
+            format: binary
+      encoding:
+        photo:
+          contentType: image/png
+responses:
+  '200':
+    $ref: '../../components/responses/200Update.yaml'
+  '400':
+    $ref: '../../components/responses/400.yaml'
+  '401':
+    $ref: '../../components/responses/401.yaml'
+  '404':
+    $ref: '../../components/responses/404.yaml'

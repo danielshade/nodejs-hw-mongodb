@@ -1,7 +1,4 @@
-description: |
-  Bad Request. Possible reasons:
-    - Invalid request contact by ID (validation error)
-    - Invalid request body (schema validation error)
+description: The data failed validation
 content:
   application/json:
     schema:
@@ -16,46 +13,13 @@ content:
           example: 400
         message:
           type: string
-          example: BadRequestError
+          example: dataValidationError
         data:
           type: object
           required:
             - message
-            - errors
           properties:
             message:
               type: string
-              example: 'Bad Request'
-            errors:
-              type: array
-              items:
-                type: object
-                required:
-                  - message
-                  - path
-                  - type
-                  - context
-                properties:
-                  message:
-                    type: string
-                    example: '"name" is not allowed to be empty'
-                  path:
-                    type: array
-                    items:
-                      type: string
-                      example: ['name']
-                  type:
-                    type: string
-                    example: string.empty
-                  context:
-                    type: object
-                    properties:
-                      label:
-                        type: string
-                        example: name
-                      value:
-                        type: string
-                        example: ''
-                      key:
-                        type: string
-                        example: name
+              example: 'The data failed validation!'
+

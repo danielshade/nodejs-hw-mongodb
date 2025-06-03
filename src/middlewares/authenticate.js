@@ -1,43 +1,32 @@
+// src/middlewares/authenticate.js
 import createHttpError from 'http-errors';
-import { SessionsCollection } from '../db/models/session.js';
-import { UsersCollection } from '../db/models/user.js';
+import jwt from 'jsonwebtoken';
+import { getEnvVar } from '../utils/getEnvVar.js';
 
-export const authenticate = async (req, res, next) => {
-  const authHeader = req.get('Authorization');
-  if (!authHeader) {
-    next(createHttpError(401, 'Please provide Authorization header'));
-    return;
+const JWT_SECRET = getEnvVar('JWT_SECRET');
+
+/**
+ *  authenticate(req, res, next)
+ *  - looks for Authorization: Bearer <token>
+ *  - verifies JWT_SECRET
+ *  - attaches user payload to req.user
+ */
+export default async function authenticate(req, res, next) {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      throw createHttpError(401, 'Authorization header missing');
+    }
+
+    const [scheme, token] = authHeader.split(' ');
+    if (scheme !== 'Bearer' || !token) {
+      throw createHttpError(401, 'Invalid authorization format');
+    }
+
+    const payload = jwt.verify(token, JWT_SECRET);
+    req.user = payload; // e.g. { id: ..., email: ... }
+    next();
+  } catch (err) {
+    next(createHttpError(401, 'Not authorized'));
   }
-  const bearer = authHeader.split(' ')[0];
-  const token = authHeader.split(' ')[1];
-
-  if (bearer !== 'Bearer' || !token) {
-    next(createHttpError(401, 'Auth header should be of type Bearer'));
-    return;
-  }
-
-  const session = await SessionsCollection.findOne({ accessToken: token });
-
-
-  if (!session) {
-    next(createHttpError(401, 'Session not found'));
-    return;
-  }
-
-
-  if (new Date() > new Date(session.accessTokenValidUntil)) {
-    next(createHttpError(401, 'Access token expired'));
-  }
-
-  const user = await UsersCollection.findById(session.userId);
-
-  if (!user) {
-    next(createHttpError(401));
-    return;
-  }
-
-  req.user = user;
-
-  next();
-};
-
+}

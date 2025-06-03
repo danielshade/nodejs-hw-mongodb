@@ -44,3 +44,4 @@ export const THIRTY_DAYS    = 30 * 24 * 60 * 60 * 1000;
 export const TEMPLATES_DIR = path.join(process.cwd(), 'src', 'templates');
 
 // ── За потреби ще інші константи (наприклад, якщо в коді шукаються SMTP тощо). ──
+export const SWAGGER_PATH = path.join(process.cwd(), 'docs', 'swagger.json');

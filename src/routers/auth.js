@@ -1,3 +1,4 @@
+// src/routers/auth.js
 import { Router } from 'express';
 import { validateBody } from '../middlewares/validateBody.js';
 import {
@@ -16,7 +17,7 @@ import {
   userRegisterController,
 } from '../controllers/auth.js';
 
-export const authRouter = Router();
+const authRouter = Router();
 
 authRouter.post(
   '/register',
@@ -30,9 +31,15 @@ authRouter.post(
   controllerWrapper(loginUserController),
 );
 
-authRouter.post('/refresh', controllerWrapper(refreshTokenController));
+authRouter.post(
+  '/refresh',
+  controllerWrapper(refreshTokenController),
+);
 
-authRouter.post('/logout', controllerWrapper(logoutUserController));
+authRouter.post(
+  '/logout',
+  controllerWrapper(logoutUserController),
+);
 
 authRouter.post(
   '/send-reset-email',
@@ -45,3 +52,6 @@ authRouter.post(
   validateBody(resetPasswordSchema),
   controllerWrapper(resetPasswordController),
 );
+
+// Саме default-експорт:
+export default authRouter;

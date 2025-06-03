@@ -1,8 +1,9 @@
 // ── src/server.js ──
 
 import express from 'express';
-import contactsRouter from './routers/contacts.js'; // <-- це має збігатися з export default у contacts.js
-import authRouter from './routers/auth.js';         // аналогічно має бути default-експорт
+import contactsRouter from './routers/contacts.js';   // (контакти ми вже імпортуємо як default)
+import authRouter     from './routers/auth.js';       // тепер authRouter – default-експорт
+
 import cors from 'cors';
 import logger from 'pino-http';
 import cookieParser from 'cookie-parser';

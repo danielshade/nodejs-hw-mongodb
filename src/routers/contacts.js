@@ -1,29 +1,29 @@
 // src/routers/contacts.js
 import { Router } from 'express';
+// ↓ тут помилково вказано contactsController.js, а насправді файл називається contacts.js
 import {
   getAllContacts,
   getContactById,
   createContact,
   updateContact,
   deleteContact,
-} from '../controllers/contactsController.js';
+} from '../controllers/contactsController.js';  
 import authenticate from '../middlewares/authenticate.js';
-import validateBody from '../middlewares/validateBody.js';
+import { validateBody } from '../middlewares/validateBody.js';
 
-const contactsRouter = Router();
+const contactsRouter = new Router();
 
-// all /contacts/* routes require authentication
 contactsRouter.use(authenticate);
 
 contactsRouter
   .route('/')
-  .get(controllerWrapper(getAllContacts))
-  .post(validateBody(), controllerWrapper(createContact));
+  .get(getAllContacts)
+  .post(validateBody(), createContact);
 
 contactsRouter
   .route('/:id')
-  .get(controllerWrapper(getContactById))
-  .patch(validateBody(), controllerWrapper(updateContact))
-  .delete(controllerWrapper(deleteContact));
+  .get(getContactById)
+  .patch(validateBody(), updateContact)
+  .delete(deleteContact);
 
 export default contactsRouter;

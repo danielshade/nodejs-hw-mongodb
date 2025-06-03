@@ -1,5 +1,6 @@
+// src/routers/auth.js
 import { Router } from 'express';
-import { validateBody } from '../middlewares/validateBody.js';
+import validateBody from '../middlewares/validateBody.js';
 import {
   loginUserSchema,
   registerUserSchema,
@@ -30,9 +31,15 @@ authRouter.post(
   controllerWrapper(loginUserController),
 );
 
-authRouter.post('/refresh', controllerWrapper(refreshTokenController));
+authRouter.post(
+  '/refresh',
+  controllerWrapper(refreshTokenController),
+);
 
-authRouter.post('/logout', controllerWrapper(logoutUserController));
+authRouter.post(
+  '/logout',
+  controllerWrapper(logoutUserController),
+);
 
 authRouter.post(
   '/send-reset-email',

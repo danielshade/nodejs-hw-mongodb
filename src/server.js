@@ -1,11 +1,12 @@
+// src/server.js
 import express from 'express';
 import swaggerDocs from './middlewares/swaggerDocs.js';
 import cors from 'cors';
 import logger from 'pino-http';
 import cookieParser from 'cookie-parser';
 
-import contactsRouter from './routers/contacts.js';
-import authRouter from './routers/auth.js';
+import contactsRouter from './routers/contacts.js';     // це default-експорт з contacts.js
+import { authRouter } from './routers/auth.js';         // це named-експорт з auth.js
 import notFoundHandler from './middlewares/notFoundHandler.js';
 import errorHandler from './middlewares/errorHandler.js';
 import { UPLOAD_DIR } from './constants/index.js';
@@ -24,7 +25,7 @@ export default function setupServer() {
   // 3) logger
   app.use(logger());
 
-  // 4) роздача статичних файлів
+  // 4) статичні файли аплоаду
   app.use('/uploads', express.static(UPLOAD_DIR));
 
   // 5) API-роути

@@ -1,53 +1,36 @@
+// src/routers/contacts.js
 import { Router } from 'express';
+import authenticate    from '../middlewares/authenticate.js';
+import { validateBody } from '../middlewares/validateBody.js';
+import { controllerWrapper } from '../utils/controllerWrapper.js';
 
 import {
-  createContactController,
-  deleteContactByIdController,
-  getContactByIdController,
-  getContactsController,
-  updateContactByIdController,
+  getAllContacts,
+  getContactById,
+  createContact,
+  updateContact,
+  deleteContact,
 } from '../controllers/contacts.js';
-import { controllerWrapper } from '../utils/controllerWrapper.js';
-import { validateBody } from '../middlewares/validateBody.js';
+
 import {
   createContactSchema,
   updateContactSchema,
 } from '../validation/contacts.js';
-import { isValidId } from '../middlewares/isValidId.js';
-import authenticate from '../middlewares/authenticate.js';
-import { upload } from '../middlewares/multer.js';
 
-export const contactsRouter = Router();
+const contactsRouter = Router();
 
-contactsRouter.get('/', authenticate, controllerWrapper(getContactsController));
+contactsRouter.use(authenticate);
 
-contactsRouter.get(
-  '/:contactId',
-  authenticate,
-  isValidId,
-  controllerWrapper(getContactByIdController),
-);
+contactsRouter
+  .route('/')
+  .get(controllerWrapper(getAllContacts))
+  .post(validateBody(createContactSchema), controllerWrapper(createContact));
 
-contactsRouter.post(
-  '/',
-  authenticate,
-  upload.single('photo'),
-  validateBody(createContactSchema),
-  controllerWrapper(createContactController),
-);
+contactsRouter
+  .route('/:id')
+  .get(controllerWrapper(getContactById))
+  .patch(validateBody(updateContactSchema), controllerWrapper(updateContact))
+  .delete(controllerWrapper(deleteContact));
 
-contactsRouter.patch(
-  '/:contactId',
-  authenticate,
-  upload.single('photo'),
-  isValidId,
-  validateBody(updateContactSchema),
-  controllerWrapper(updateContactByIdController),
-);
-
-contactsRouter.delete(
-  '/:contactId',
-  authenticate,
-  isValidId,
-  controllerWrapper(deleteContactByIdController),
-);
+// Ось тут робимо default-експорт:
+export default contactsRouter;

@@ -1,6 +1,8 @@
 
- export const notFoundHandler = (req, res) => {
-    res.status(404).json({
-      message: 'Route not found',
-    });
-  };
+ // src/middlewares/notFoundHandler.js
+import createHttpError from 'http-errors';
+
+// Тепер це default-експорт:
+export default function notFoundHandler(req, res, next) {
+  next(createHttpError(404, 'Not found'));
+}

@@ -1,24 +1,21 @@
-// src/constants/index.js
+/// src/constants/index.js
 import path from 'node:path';
 
-// ── SORT_ORDER ──
+// ── Вже наявні експортовані значення: SORT_ORDER, UPLOAD_DIR, CLOUDINARY тощо ──
 export const SORT_ORDER = {
   ASC:  'asc',
   DESC: 'desc',
 };
 
-// ── Шляхи до директорій завантажень ──
 export const UPLOAD_DIR      = path.join(process.cwd(), 'uploads');
 export const TEMP_UPLOAD_DIR = path.join(process.cwd(), 'temp');
 
-// ── Cloudinary ──
 export const CLOUDINARY = {
   CLOUD_NAME: 'CLOUDINARY_CLOUD_NAME',
   API_KEY:    'CLOUDINARY_API_KEY',
   API_SECRET: 'CLOUDINARY_API_SECRET',
 };
 
-// ── SMTP ──
 export const SMTP = {
   SMTP_HOST:     'SMTP_HOST',
   SMTP_PORT:     'SMTP_PORT',
@@ -27,7 +24,6 @@ export const SMTP = {
   SMTP_FROM:     'SMTP_FROM',
 };
 
-// ── JWT ──
 export const JWT = {
   SECRET:         'JWT_SECRET',
   REFRESH_SECRET: 'REFRESH_SECRET',
@@ -36,11 +32,15 @@ export const JWT = {
   APP_DOMAIN:     'APP_DOMAIN',
 };
 
-// ── MongoDB ──
 export const MONGODB = {
   URI: 'MONGODB_URI',
 };
 
-// ── Часові константи, які імпортує auth.js ──
-export const FIFTEEN_MINUTES = 15 * 60 * 1000;        // 15 хвилин у мілісекундах
-export const THIRTY_DAYS    = 30 * 24 * 60 * 60 * 1000; // 30 днів у мілісекундах
+// ── Додаємо константи часу, які використовуються в auth.js ──
+export const FIFTEEN_MINUTES = 15 * 60 * 1000;
+export const THIRTY_DAYS    = 30 * 24 * 60 * 60 * 1000;
+
+// ── Ось цей рядок додаємо, щоб зникла помилка про TEMPLATES_DIR ──
+export const TEMPLATES_DIR = path.join(process.cwd(), 'src', 'templates');
+
+// ── За потреби ще інші константи (наприклад, якщо в коді шукаються SMTP тощо). ──

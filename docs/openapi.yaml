@@ -4,41 +4,62 @@ info:
   title: Contacts app
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
   description: This is a documentation of contacts app
+
+servers:
+  - url: https://hw7-swagger-af7t.onrender.com
+
 tags:
-  # теги, що ви будете використовувати
   - name: Contacts
     description: Operations about contacts.
   - name: Auth
     description: Auth operations.
-servers:
-  - url: http://localhost:3000
-  - url: https://nodejs-hw-mongodb-7rih.onrender.com
+
 paths:
   /contacts:
     get:
-      $ref: ../swagger/paths/contacts/get.yaml
+      $ref: '../swagger/paths/contacts/get.yaml'
     post:
-      $ref: ../swagger/paths/contacts/post.yaml
+      $ref: '../swagger/paths/contacts/post.yaml'
+
   /contacts/{id}:
     get:
-      $ref: ../swagger/paths/contacts/{id}/get.yaml
+      $ref: '../swagger/paths/contacts/{id}/get.yaml'
     patch:
-      $ref: ../swagger/paths/contacts/{id}/patch.yaml
+      $ref: '../swagger/paths/contacts/{id}/patch.yaml'
     delete:
-      $ref: ../swagger/paths/contacts/{id}/delete.yaml
+      summary: Delete contact by id
+      operationId: deleteContact
+      tags:
+        - Contacts
+      description: Delete contact by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: 65ca67e7ae7f10c88b598384
+      responses:
+        '204':
+          description: Contact successfully deleted. No content.
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+
   /auth/register:
-    post:
-      $ref: ../swagger/paths/auth/register.yaml
+    $ref: '../swagger/paths/auth/register.yaml'
   /auth/login:
-    post:
-      $ref: ../swagger/paths/auth/login.yaml
-  #    $ref: ../swagger/paths/auth/logout.yaml
-  #    $ref: ../swagger/paths/auth/refresh.yaml
-    # тут будуть посилання на ендпоінти
+    $ref: '../swagger/paths/auth/login.yaml'
+
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
+
+  # ... інші components (schemas & responses) ...

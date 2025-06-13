@@ -467,7 +467,7 @@
       },
       "delete": {
         "204": {
-          "description": "Contact successfully deleted. No content."
+          "description": "No des"
         },
         "400": {
           "$ref": "../../../components/responses/400.yaml"

@@ -507,196 +507,200 @@
       }
     },
     "/auth/register": {
-      "tags": [
-        "Auth"
-      ],
-      "summary": "Register new user",
-      "operationId": "registerUser",
-      "description": "Register a new user with name, email, and password",
-      "security": [
-        {
-          "bearerAuth": []
-        }
-      ],
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "name",
-                "email",
-                "password"
-              ],
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "John Doe"
-                },
-                "email": {
-                  "type": "string",
-                  "format": "email",
-                  "example": "john.doe@example.com"
-                },
-                "password": {
-                  "type": "string",
-                  "format": "password",
-                  "example": "securePassword123"
-                }
-              }
-            }
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register new user",
+        "operationId": "registerUser",
+        "description": "Register a new user with name, email, and password",
+        "security": [
+          {
+            "bearerAuth": []
           }
-        }
-      },
-      "responses": {
-        "201": {
-          "description": "User registered successfully",
+        ],
+        "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "required": [
-                  "status",
-                  "message",
-                  "data"
+                  "name",
+                  "email",
+                  "password"
                 ],
                 "properties": {
-                  "status": {
-                    "type": "integer",
-                    "example": 201
-                  },
-                  "message": {
+                  "name": {
                     "type": "string",
-                    "example": "Successfully registered a user!"
+                    "example": "John Doe"
                   },
-                  "data": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "example": "65d1f49bfa8e9e1a9c9d3a5b"
-                      },
-                      "name": {
-                        "type": "string",
-                        "example": "John Doe"
-                      },
-                      "email": {
-                        "type": "string",
-                        "example": "john.doe@example.com"
-                      },
-                      "token": {
-                        "type": "string",
-                        "example": "jwt-token-string"
-                      }
-                    }
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "john.doe@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "securePassword123"
                   }
                 }
               }
             }
           }
         },
-        "400": {
-          "description": "Bad request (missing or invalid fields)",
-          "$ref": "../../components/responses/400.yaml"
-        },
-        "409": {
-          "description": "User with this email already exists",
-          "$ref": "../../components/responses/409.yaml"
+        "responses": {
+          "201": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully registered a user!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "65d1f49bfa8e9e1a9c9d3a5b"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "John Doe"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "john.doe@example.com"
+                        },
+                        "token": {
+                          "type": "string",
+                          "example": "jwt-token-string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (missing or invalid fields)",
+            "$ref": "#/components/responses/400"
+          },
+          "409": {
+            "description": "User with this email already exists",
+            "$ref": "#/components/responses/409"
+          }
         }
       }
     },
     "/auth/login": {
-      "tags": [
-        "Auth"
-      ],
-      "summary": "Authorized user",
-      "operationId": "logUser",
-      "description": "Log in user with email and password",
-      "security": [
-        {
-          "bearerAuth": []
-        }
-      ],
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "email",
-                "password"
-              ],
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "format": "email",
-                  "example": "john.doe@example.com"
-                },
-                "password": {
-                  "type": "string",
-                  "format": "password",
-                  "example": "securePassword123"
-                }
-              }
-            }
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Authorized user",
+        "operationId": "logUser",
+        "description": "Log in user with email and password",
+        "security": [
+          {
+            "bearerAuth": []
           }
-        }
-      },
-      "responses": {
-        "200": {
-          "description": "Login successful",
+        ],
+        "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "required": [
-                  "status",
-                  "message",
-                  "data"
+                  "email",
+                  "password"
                 ],
                 "properties": {
-                  "status": {
-                    "type": "integer",
-                    "example": 200
-                  },
-                  "message": {
+                  "email": {
                     "type": "string",
-                    "example": "Login successful"
+                    "format": "email",
+                    "example": "john.doe@example.com"
                   },
-                  "data": {
-                    "type": "object",
-                    "properties": {
-                      "accessToken": {
-                        "type": "string",
-                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                      }
-                    }
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "securePassword123"
                   }
                 }
               }
             }
           }
         },
-        "401": {
-          "description": "Unauthorized - invalid email or password",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "status",
-                  "message"
-                ],
-                "properties": {
-                  "status": {
-                    "type": "integer",
-                    "example": 401
-                  },
-                  "message": {
-                    "type": "string",
-                    "example": "Invalid credentials"
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Login successful"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid email or password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 401
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid credentials"
+                    }
                   }
                 }
               }

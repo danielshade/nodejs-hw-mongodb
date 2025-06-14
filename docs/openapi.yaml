@@ -1,5 +1,4 @@
 openapi: 3.1.0
-
 info:
   version: 1.0.0
   title: Contacts app
@@ -20,26 +19,27 @@ tags:
 paths:
   /contacts:
     get:
-      $ref: ../swagger/paths/contacts/get.yaml
+      $ref: '../swagger/paths/contacts/get.yaml'
     post:
-      $ref: ../swagger/paths/contacts/post.yaml
+      $ref: '../swagger/paths/contacts/post.yaml'
 
   /contacts/{id}:
     get:
-      $ref: ../swagger/paths/contacts/{id}/get.yaml
+      $ref: '../swagger/paths/contacts/{id}/get.yaml'
     patch:
-      $ref: ../swagger/paths/contacts/{id}/patch.yaml
+      $ref: '../swagger/paths/contacts/{id}/patch.yaml'
     delete:
-      $ref: ../swagger/paths/contacts/{id}/delete.yaml
+      $ref: '../swagger/paths/contacts/{id}/delete.yaml'
 
   /auth/register:
-    $ref: ../swagger/paths/auth/register.yaml
+    post:
+      $ref: '../swagger/paths/auth/register.yaml'
 
   /auth/login:
-    $ref: ../swagger/paths/auth/login.yaml
+    post:
+      $ref: '../swagger/paths/auth/login.yaml'
 
 components:
-
   securitySchemes:
     bearerAuth:
       type: http
